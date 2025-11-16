@@ -1,0 +1,84 @@
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="fiszki.css" />
+    <title>Fluentico</title>
+</head>
+
+<body>
+    <div class="main-container">
+
+
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <div class="logo-square"></div>
+                <h1 class="brand-title">FLUENTICO</h1>
+            </div>
+
+            <nav class="sidebar-menu" role="navigation">
+                <button class="menu-item active" role="menuitem">
+                    <span class="menu-text large">EKRAN GŁÓWNY</span>
+                </button>
+
+                <button class="menu-item" role="menuitem">
+                    <span class="menu-text large">FISZKI</span>
+                </button>
+
+                <button class="menu-item" role="menuitem">
+                    <span class="menu-text large">QUIZ DNIA</span>
+                </button>
+
+                <button class="menu-item" role="menuitem">
+                    <span class="menu-text large">TESTY</span>
+                </button>
+
+                <div class="divider"></div>
+
+                <button class="menu-item settings" role="menuitem">
+                    <span class="menu-text">USTAWIENIA</span>
+                </button>
+            </nav>
+        </aside>
+
+        <main class="content-area">
+            <header class="header-section">
+                <div class="header-row">
+                    <!-- <img src="" alt="Back" class="back-icon" onclick="goBack()">-->
+                    <h1 class="page-title">TWOJE FISZKI</h1>
+                </div>
+            </header>
+
+            <section class="categories-grid">
+                <button class="category-button featured" onclick="selectCategory('jedzenie')">
+                    <span class="category-text large">JEDZENIE</span>
+                </button>
+
+                <button class="category-button" onclick="selectCategory('zwroty')">
+                    <span class="category-text small">PRZYDATNE ZWROTY</span>
+                </button>
+
+                <button class="category-button" onclick="selectCategory('podroz')">
+                    <span class="category-text large">PODRÓŻ</span>
+                </button>
+
+                <button class="category-button" onclick="selectCategory('hotel')">
+                    <span class="category-text large">HOTEL</span>
+                </button>
+
+                <button class="category-button" onclick="selectCategory('sklep')">
+                    <span class="category-text large">SKLEP</span>
+                </button>
+
+                <button class="category-button" onclick="selectCategory('restauracja')">
+                    <span class="category-text large">RESTAURACJA</span>
+                </button>
+            </section>
+        </main>
+    </div>
+
+    <script>
+    </script>
+</body>
+
+</html>
