@@ -7,7 +7,7 @@
 body {
     font-family: 'Archivo Black', Arial, sans-serif;
     background-color: #efe6dd;
-    border: 10px solid #000000;
+    /*border: 10px solid #000000;*/
     min-height: 100vh;
     display: flex;
     justify-content: flex-start;
@@ -37,6 +37,7 @@ body {
     align-items: center;
     width: auto;
     margin-bottom: 27px;
+
 }
 
 .logo-square {

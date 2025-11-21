@@ -153,7 +153,7 @@
 
   .content-area {
       flex: 1;
-      padding: 52px 40px 40px;
+      /*padding: 52px 30px 30px;*/
       margin-left: 0;
   }
 
@@ -172,18 +172,6 @@
       margin-bottom: 10px;
   }
 
-  .back-icon {
-      width: 80px;
-      height: 80px;
-      margin-right: 58px;
-      cursor: pointer;
-      transition: transform 0.3s ease-in-out;
-  }
-
-  .back-icon:hover {
-      transform: scale(1.1);
-  }
-
   .page-title {
       text-align: justify;
       font-size: 48px;
@@ -197,8 +185,8 @@
   .categories-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 24px;
-      margin: 0 30px;
+      gap: 15px;
+      margin: 0 15px;
   }
 
   .category-button {
@@ -207,7 +195,7 @@
       display: block;
       text-decoration: none;
       color: white;
-      padding: 34px;
+      padding: 15px;
       border: none;
       cursor: pointer;
       transition: all 0.3s ease-in-out;
