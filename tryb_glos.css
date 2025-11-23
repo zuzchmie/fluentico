@@ -1,5 +1,3 @@
-@import url("twoje_fiszki.css")
-
 .flashcard-voice-container {
     display: flex;
     flex-direction: column;
