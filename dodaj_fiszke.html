@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>Fluentico – Fiszki</title>
+    <title>Fluentico – Stwórz fiszkę</title>
     <link rel="stylesheet" href="twoje_fiszki.css" />
     <link rel="stylesheet" href="tryb_glos.css" />
 </head>
@@ -42,31 +42,32 @@
     <main class="content-area">
         <header class="header-section">
             <div class="header-row">
-                <a href="fiszki_main.html" class="back-button">←</a>
+                <a href="fiszki_main.html" class="back-button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 18L9 12L15 6" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+                <h1 class="page-title">STWÓRZ FISZKĘ</h1>
             </div>
         </header>
 
         <section class="flashcard-voice-container">
-            <div class="flashcard-set-select" style="text-align:left; margin-bottom: 10px;">
+
+            <div class="voice-option">Dodaj przód karty</div>
+            <div class="voice-option">Dodaj tył karty</div>
+
+        <!-- Przycisk Dodaj audio i Dodaj obrazek w jednej linii pod fiszką -->
+            <div class="insert-buttons">
+                <button class="action-button">DODAJ AUDIO</button>
                 <button class="action-button">WYBIERZ ZESTAW</button>
+                <button class="action-button">DODAJ OBRAZEK</button>
             </div>
 
-            <div class="flashcard-content" style="display:flex; justify-content: space-between; align-items: center;">
-                <div class="voice-options">
-                    <div class="voice-option">Dodaj przód karty</div>
-                    <div class="voice-option">Dodaj tył karty</div>
-                    <button class="action-button">DODAJ AUDIO</button>
-                </div>
-
-                <div class="image-button" style="margin-left:auto;">
-                    <button class="action-button">DODAJ OBRAZEK</button>
-                </div>
-            </div>
-
-            <div class="flashcard-buttons" style="margin-top:10px;">
+            <div class="flashcard-buttons">
                 <button>ZAPISZ</button>
             </div>
         </section>
+
     </main>
 </div>
 </body>
