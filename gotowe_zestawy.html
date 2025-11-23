@@ -1,5 +1,7 @@
 <html lang="pl">
 
+</html>
+
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="gotowe_zestawy.css" />
@@ -8,7 +10,6 @@
 
 <body>
     <div class="main-container">
-
 
         <aside class="sidebar" id="sidebar">
             <div class="logo">
@@ -20,7 +21,6 @@
                 <a href="website.html" class="menu-item active" role="menuitem">
                     <span class="menu-text large">EKRAN GŁÓWNY</span>
                 </a>
-
 
                 <a href="fiszki_main.html" class="menu-item active" role="menuitem">
                     <span class="menu-text large">FISZKI</span>
@@ -45,41 +45,40 @@
         <main class="content-area">
             <header class="header-section">
                 <div class="header-row">
-                    <!-- <img src="" alt="Back" class="back-icon" onclick="goBack()">-->
                     <h1 class="page-title">GOTOWE ZESTAWY</h1>
                 </div>
             </header>
 
             <section class="categories-grid">
-                <button class="category-button" onclick="selectCategory('jedzenie')">
+
+                <button class="category-button" onclick="window.location.href='zestaw_jedzenie.html'">
                     <span class="category-text large">JEDZENIE</span>
                 </button>
 
-                <button class="category-button" onclick="selectCategory('zwroty')">
+                <button class="category-button" onclick="window.location.href='zestaw_przydatne.html'">
                     <span class="category-text small">PRZYDATNE ZWROTY</span>
                 </button>
 
-                <button class="category-button" onclick="selectCategory('podroz')">
+                <button class="category-button" onclick="window.location.href='zestaw_podroz.html'">
                     <span class="category-text large">PODRÓŻ</span>
                 </button>
 
-                <button class="category-button" onclick="selectCategory('hotel')">
+                <button class="category-button" onclick="window.location.href='zestaw_hotel.html'">
                     <span class="category-text large">HOTEL</span>
                 </button>
 
-                <button class="category-button" onclick="selectCategory('sklep')">
+                <button class="category-button" onclick="window.location.href='zestaw_sklep.html'">
                     <span class="category-text large">SKLEP</span>
                 </button>
 
-                <button class="category-button" onclick="selectCategory('restauracja')">
+                <button class="category-button" onclick="window.location.href='zestaw_restauracja.html'">
                     <span class="category-text large">RESTAURACJA</span>
                 </button>
+
             </section>
         </main>
     </div>
 
-    <script>
-    </script>
 </body>
 
 </html>

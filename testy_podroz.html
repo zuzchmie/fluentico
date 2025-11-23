@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="gotowe_zestawy.css" />
+    <title>Zestawy – Test | Fluentico</title>
+
+    <style>
+        /* MAIN CONTENT */
+        .content-area {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Przycisk powrotu */
+        .back-link {
+            background-color: #699cb5;
+            color: #ffffff;
+            padding: 12px 24px;
+            font-size: 24px;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            border-radius: 24px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0 0 0px 0;
+            align-self: flex-start;
+        }
+
+        .back-link:hover {
+            background-color: #5a8ba1;
+        }
+
+        /* Kontener testu */
+        .flashcards-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .flashcard {
+            width: 400px;
+            max-width: 90%;
+            min-height: 200px;
+            background-color: #365b6d;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Odpowiedzi */
+        .answers-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .answer-button {
+            background-color: #699cb5;
+            color: #ffffff;
+            border: none;
+            padding: 16px;
+            font-size: 24px;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            border-radius: 20px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .answer-button:hover {
+            background-color: #5a8ba1;
+            transform: scale(1.03);
+        }
+
+        .answer-button:active {
+            transform: scale(0.97);
+        }
+
+        /* Dolne przyciski */
+        .flashcard-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .flashcard-buttons button {
+            background-color: #699cb5;
+            color: #ffffff;
+            border: none;
+            padding: 16px 28px;
+            font-size: 24px;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            border-radius: 24px;
+            cursor: pointer;
+        }
+
+        .flashcard-buttons button:hover {
+            background-color: #5a8ba1;
+            transform: scale(1.05);
+        }
+
+        .flashcard-buttons button:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <div class="logo-square"></div>
+                <h1 class="brand-title">FLUENTICO</h1>
+            </div>
+
+            <nav class="sidebar-menu" role="navigation">
+                <a href="website.html" class="menu-item" role="menuitem">
+                    <span class="menu-text large">EKRAN GŁÓWNY</span>
+                </a>
+                <a href="fiszki_main.html" class="menu-item" role="menuitem">
+                    <span class="menu-text large">FISZKI</span>
+                </a>
+                <a href="quiz_dnia.html" class="menu-item" role="menuitem">
+                    <span class="menu-text large">QUIZ DNIA</span>
+                </a>
+                <a href="testy_main.html" class="menu-item" role="menuitem">
+                    <span class="menu-text large">TESTY</span>
+                </a>
+                <div class="divider"></div>
+                <button class="menu-item settings" role="menuitem">
+                    <span class="menu-text">USTAWIENIA</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="content-area">
+            <header class="header-section">
+                <h1 class="page-title">TESTY: PODRÓŻ</h1>
+            </header>
+
+            <!-- Przycisk powrotu -->
+            <a href="testy_main.html" class="back-link">← Powrót do kategorii</a>
+
+            <!-- Test – wycentrowany -->
+            <section class="flashcards-container">
+
+                <!-- FISZKA -->
+                <div class="flashcard">
+                    <p>bilet</p>
+                </div>
+
+                <!-- ODPOWIEDZI -->
+                <div class="answers-container">
+                    <button class="answer-button">ticket</button>
+                    <button class="answer-button">station</button>
+                    <button class="answer-button">seat</button>
+                </div>
+
+                <!-- DOLNE PRZYCISKI -->
+                <div class="flashcard-buttons">
+                    <button>Poprzednia</button>
+                    <button>Następna</button>
+                </div>
+
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>
