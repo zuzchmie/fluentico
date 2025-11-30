@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="pl">
 
 <head>
@@ -9,7 +10,6 @@
 <body>
     <div class="main-container">
 
-
         <aside class="sidebar" id="sidebar">
             <div class="logo">
                 <div class="logo-square"></div>
@@ -18,67 +18,78 @@
 
             <nav class="sidebar-menu" role="navigation">
                 <a href="website.html" class="menu-item darkgray" role="menuitem">
-                    <span class="menu-text large">EKRAN GŁÓWNY</span>
-                </a>
+                    <a href="website.html" class="menu-item darkgray" role="menuitem">
+                        <span class="menu-text large">EKRAN GŁÓWNY</span>
+                    </a>
 
 
-                <a href="fiszki_main.html" class="menu-item blue" role="menuitem">
-                    <span class="menu-text large">FISZKI</span>
-                </a>
+                    <a href="fiszki_main.html" class="menu-item blue" role="menuitem">
+                        <span class="menu-text large">FISZKI</span>
+                    </a>
 
-                <a href="quiz_dnia.html" class="menu-item lazur" role="menuitem">
-                    <span class="menu-text large">QUIZ DNIA</span>
-                </a>
+                    <a href="quiz_dnia.html" class="menu-item lazur" role="menuitem">
+                        <a href="quiz_dnia.html" class="menu-item lazur" role="menuitem">
+                            <span class="menu-text large">QUIZ DNIA</span>
+                        </a>
 
-                <a href="testy_main.html" class="menu-item darkblue" role="menuitem">
-                    <span class="menu-text large">TESTY</span>
-                </a>
+                        <a href="testy_main.html" class="menu-item darkblue" role="menuitem">
+                            <a href="testy_main.html" class="menu-item darkblue" role="menuitem">
+                                <span class="menu-text large">TESTY</span>
+                            </a>
 
-                <div class="divider"></div>
+                            <div class="divider"></div>
 
-                <button class="menu-item settings" role="menuitem">
-                    <span class="menu-text large">USTAWIENIA</span>
-                </button>
+                            <button class="menu-item settings" role="menuitem">
+                                <span class="menu-text large">USTAWIENIA</span>
+                                <span class="menu-text large">USTAWIENIA</span>
+                            </button>
             </nav>
         </aside>
 
         <main class="content-area">
             <header class="header-section">
                 <div class="header-row">
-                    <!-- <img src="" alt="Back" class="back-icon" onclick="goBack()">-->
                     <h1 class="page-title">GOTOWE ZESTAWY</h1>
                 </div>
             </header>
 
-            <section class="categories-grid">
-                <button class="category-button" onclick="selectCategory('jedzenie')">
-                    <span class="category-text large">JEDZENIE</span>
-                </button>
-
-                <button class="category-button" onclick="selectCategory('zwroty')">
-                    <span class="category-text small">PRZYDATNE ZWROTY</span>
-                </button>
-
-                <button class="category-button" onclick="selectCategory('podroz')">
-                    <span class="category-text large">PODRÓŻ</span>
-                </button>
-
-                <button class="category-button" onclick="selectCategory('hotel')">
-                    <span class="category-text large">HOTEL</span>
-                </button>
-
-                <button class="category-button" onclick="selectCategory('sklep')">
-                    <span class="category-text large">SKLEP</span>
-                </button>
-
-                <button class="category-button" onclick="selectCategory('restauracja')">
-                    <span class="category-text large">RESTAURACJA</span>
-                </button>
+            <section class="categories-grid" id="sets-container">
+                <!-- Przyciski będą generowane dynamicznie przez JavaScript -->
             </section>
         </main>
     </div>
 
+    <!-- Dołączamy plik z danymi -->
+    <script src="flashcardsData.js"></script>
     <script>
+        // Funkcja do tworzenia przycisków zestawów
+        function generateSetButtons() {
+            const container = document.getElementById('sets-container');
+            const sets = getAllSets();
+
+            sets.forEach(setName => {
+                const button = document.createElement('button');
+                button.className = 'category-button';
+                button.onclick = function () {
+                    // Przekierowanie do uniwersalnej strony z fiszkami
+                    window.location.href = `grid_zestaw.html?set=${setName}`;
+                };
+
+                // Formatowanie nazwy (zamiana podkreśleń na spacje, wielka pierwsza litera)
+                const displayName = setName.replace(/_/g, ' ')
+                    .replace(/\b\w/g, l => l.toUpperCase());
+
+                const span = document.createElement('span');
+                span.className = 'category-text large';
+                span.textContent = displayName;
+
+                button.appendChild(span);
+                container.appendChild(button);
+            });
+        }
+
+        // Generuj przyciski po załadowaniu strony
+        document.addEventListener('DOMContentLoaded', generateSetButtons);
     </script>
 </body>
 
