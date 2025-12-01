@@ -46,40 +46,46 @@
 
         <main class="content-area">
             <header class="header-section">
-                <div class="header-row">
-                    <!-- <img src="" alt="Back" class="back-icon" onclick="goBack()">-->
-                    <h1 class="page-title">TESTY</h1>
-                </div>
+                <h1 class="page-title">TESTY</h1>
             </header>
-
-            <section class="categories-grid">
-
-                <a href="testy_jedzenie.html" class="category-button">
-                    <span class="category-text large">JEDZENIE</span>
-                </a>
-
-                <a href="testy_przydatne.html" class="category-button">
-                    <span class="category-text small">PRZYDATNE ZWROTY</span>
-                </a>
-
-                <a href="testy_podroz.html" class="category-button">
-                    <span class="category-text large">PODRÓŻ</span>
-                </a>
-
-                <a href="testy_hotel.html" class="category-button">
-                    <span class="category-text large">HOTEL</span>
-                </a>
-
-                <a href="testy_sklep.html" class="category-button">
-                    <span class="category-text large">SKLEP</span>
-                </a>
-
-                <a href="testy_restauracja.html" class="category-button">
-                    <span class="category-text large">RESTAURACJA</span>
-                </a>
-
+            <section class="categories-grid" id="sets-container">
+                <!-- Przyciski będą generowane dynamicznie przez JavaScript -->
             </section>
         </main>
+    </div>
+
+    <script src="testData.js"></script>
+    <script>
+        // Funkcja do tworzenia przycisków zestawów
+        function generateSetButtons() {
+            const container = document.getElementById('sets-container');
+            const sets = getAllSets();
+
+            sets.forEach(setName => {
+                const button = document.createElement('button');
+                button.className = 'category-button';
+                button.onclick = function () {
+                    // Przekierowanie do uniwersalnej strony z fiszkami
+                    window.location.href = `grid_zestaw_test.html?set=${setName}`;
+                };
+
+                // Formatowanie nazwy (zamiana podkreśleń na spacje, wielka pierwsza litera)
+                const displayName = setName.replace(/_/g, ' ')
+                    .replace(/\b\w/g, l => l.toUpperCase());
+
+                const span = document.createElement('span');
+                span.className = 'category-text large';
+                span.textContent = displayName;
+
+                button.appendChild(span);
+                container.appendChild(button);
+            });
+        }
+
+        // Generuj przyciski po załadowaniu strony
+        document.addEventListener('DOMContentLoaded', generateSetButtons);
+    </script>
+    </main>
     </div>
 
     <script>

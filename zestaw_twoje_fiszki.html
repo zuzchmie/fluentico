@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="gotowe_zestawy.css" />
+    <title>Zestawy – Jedzenie | Fluentico</title>
+    <style>
+        /* MAIN CONTENT */
+        .content-area {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Przycisk powrotu – zaraz pod nagłówkiem */
+        .back-link {
+            background-color: #699cb5;
+            color: #ffffff;
+            padding: 12px 24px;
+            font-size: 24px;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            border-radius: 24px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0 0 10px 0;
+            align-self: flex-start;
+        }
+
+        .back-link:hover {
+            background-color: #5a8ba1;
+        }
+
+        /* Kontener fiszki i przycisków – wycentrowany w pionie i poziomie */
+        .flashcards-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .flashcard {
+            width: 400px;
+            max-width: 90%;
+            min-height: 200px;
+            background-color: #365b6d;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .flashcard:hover {
+            background-color: #2e4f58;
+        }
+
+        .flashcard-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .flashcard-buttons button {
+            background-color: #699cb5;
+            color: #ffffff;
+            border: none;
+            padding: 16px 28px;
+            font-size: 24px;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .flashcard-buttons button:hover {
+            background-color: #5a8ba1;
+            transform: scale(1.05);
+        }
+
+        .flashcard-buttons button:active {
+            transform: scale(0.98);
+        }
+
+        .progress-info {
+            font-size: 18px;
+            color: #666;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <div class="logo-square"></div>
+                <h1 class="brand-title">FLUENTICO</h1>
+            </div>
+
+            <nav class="sidebar-menu" role="navigation">
+                <a href="website.html" class="menu-item darkgray" role="menuitem">
+                    <span class="menu-text large">EKRAN GŁÓWNY</span>
+                </a>
+
+                <a href="fiszki_main.html" class="menu-item blue" role="menuitem">
+                    <span class="menu-text large">FISZKI</span>
+                </a>
+
+                <a href="quiz_dnia.html" class="menu-item lazur" role="menuitem">
+                    <span class="menu-text large">QUIZ DNIA</span>
+                </a>
+
+                <a href="testy_main.html" class="menu-item darkblue" role="menuitem">
+                    <span class="menu-text large">TESTY</span>
+                </a>
+
+                <div class="divider"></div>
+
+                <button class="menu-item settings" role="menuitem">
+                    <span class="menu-text large">USTAWIENIA</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="content-area">
+            <header class="header-section">
+                <h1 class="page-title" id="page-title"></h1>
+            </header>
+
+            <!-- Przycisk powrotu – zaraz pod nagłówkiem -->
+            <a href="twoje_fiszki.html" class="back-link">← Powrót do kategorii</a>
+
+            <!-- Fiszka i przyciski wycentrowane -->
+            <section class="flashcards-container">
+                <div class="flashcard" id="flashcard">
+                    <p id="flashcard-text">Ładowanie...</p>
+                </div>
+
+                <div class="progress-info" id="progress-info">
+                    Fiszka 1 z 6
+                </div>
+
+                <div class="flashcard-buttons">
+                    <button id="prev-btn">Poprzednia</button>
+                    <button id="reveal-btn">Odkryj fiszkę</button>
+                    <button id="next-btn">Następna</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Dołączamy plik z danymi -->
+    <script src="flashcardsData.js"></script>
+
+    <script>
+        // System fiszek
+        let currentSet = [];
+        let currentCardIndex = 0;
+        let isRevealed = false;
+
+        // Elementy DOM
+        const flashcardText = document.getElementById('flashcard-text');
+        const flashcardElement = document.getElementById('flashcard');
+        const revealBtn = document.getElementById('reveal-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const progressInfo = document.getElementById('progress-info');
+        const pageTitle = document.getElementById('page-title');
+
+        // Funkcja do pobierania parametru z URL
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Funkcja do ładowania zestawu
+        function loadFlashcardsSet() {
+            const setName = getUrlParameter('set') || 'jedzenie';
+            currentSet = getFlashcardsSet(setName);
+
+            // Aktualizuj tytuł strony
+            const displayName = setName.replace(/_/g, ' ')
+                .replace(/\b\w/g, l => l.toUpperCase());
+            pageTitle.textContent = `${displayName}`;
+            document.title = `Zestaw – ${displayName} | Fluentico`;
+
+            if (currentSet.length === 0) {
+                flashcardText.textContent = "Brak fiszek w zestawie";
+                return;
+            }
+
+            showCurrentCard();
+        }
+
+        // Funkcja pokazująca aktualną fiszkę
+        function showCurrentCard() {
+            if (currentSet.length === 0) return;
+
+            const currentCard = currentSet[currentCardIndex];
+            flashcardText.textContent = currentCard.english;
+            isRevealed = false;
+            revealBtn.textContent = 'Odkryj fiszkę';
+
+            // Aktualizuj informację o postępie
+            progressInfo.textContent = `Fiszka ${currentCardIndex + 1} z ${currentSet.length}`;
+        }
+
+        // Funkcja odkrywająca/ukrywająca fiszkę
+        function toggleReveal() {
+            if (currentSet.length === 0) return;
+
+            const currentCard = currentSet[currentCardIndex];
+            if (!isRevealed) {
+                flashcardText.textContent = currentCard.polish;
+                revealBtn.textContent = 'Ukryj fiszkę';
+                isRevealed = true;
+            } else {
+                flashcardText.textContent = currentCard.english;
+                revealBtn.textContent = 'Odkryj fiszkę';
+                isRevealed = false;
+            }
+        }
+
+        // Funkcja następnej fiszki
+        function nextCard() {
+            if (currentSet.length === 0) return;
+
+            currentCardIndex = (currentCardIndex + 1) % currentSet.length;
+            showCurrentCard();
+        }
+
+        // Funkcja poprzedniej fiszki
+        function prevCard() {
+            if (currentSet.length === 0) return;
+
+            currentCardIndex = (currentCardIndex - 1 + currentSet.length) % currentSet.length;
+            showCurrentCard();
+        }
+
+        // Event listeners
+        revealBtn.addEventListener('click', toggleReveal);
+        nextBtn.addEventListener('click', nextCard);
+        prevBtn.addEventListener('click', prevCard);
+
+        // Możliwość kliknięcia w fiszkę aby ją odkryć/ukryć
+        flashcardElement.addEventListener('click', toggleReveal);
+
+        // Ładujemy zestaw po załadowaniu strony
+        document.addEventListener('DOMContentLoaded', loadFlashcardsSet);
+    </script>
+</body>
+
+</html>
