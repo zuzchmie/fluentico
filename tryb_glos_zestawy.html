@@ -53,35 +53,45 @@
             </header>
 
             <section class="categories-grid">
-
-                <button class="category-button" onclick="window.location.href='tryb_glos.html'">
-                    <span class="category-text large">JEDZENIE</span>
-                </button>
-
-                <button class="category-button" onclick="window.location.href='tryb_glos.html'">
-                    <span class="category-text small">PRZYDATNE ZWROTY</span>
-                </button>
-
-                <button class="category-button" onclick="window.location.href='tryb_glos.html'">
-                    <span class="category-text large">PODRÓŻ</span>
-                </button>
-
-                <button class="category-button" onclick="window.location.href='tryb_glos.html'">
-                    <span class="category-text large">HOTEL</span>
-                </button>
-
-                <button class="category-button" onclick="window.location.href='tryb_glos.html'">
-                    <span class="category-text large">SKLEP</span>
-                </button>
-
-                <button class="category-button" onclick="window.location.href='tryb_glos.html'">
-                    <span class="category-text large">RESTAURACJA</span>
-                </button>
-
+                            <section class="categories-grid" id="sets-container">
+                <!-- Przyciski będą generowane dynamicznie przez JavaScript -->
             </section>
         </main>
     </div>
 
+    <!-- Dołączamy plik z danymi -->
+    <script src="flashcardsData.js"></script>
+    <script>
+        // Funkcja do tworzenia przycisków zestawów
+        function generateSetButtons() {
+            const container = document.getElementById('sets-container');
+            const sets = getAllSets();
+
+            sets.forEach(setName => {
+                const button = document.createElement('button');
+                button.className = 'category-button';
+                button.onclick = function () {
+                    // Przekierowanie do uniwersalnej strony z fiszkami
+                    window.location.href = `grid_zestaw.html?set=${setName}`;
+                };
+
+                // Formatowanie nazwy (zamiana podkreśleń na spacje, wielka pierwsza litera)
+                const displayName = setName.replace(/_/g, ' ')
+                    .replace(/\b\w/g, l => l.toUpperCase());
+
+                const span = document.createElement('span');
+                span.className = 'category-text large';
+                span.textContent = displayName;
+
+                button.appendChild(span);
+                container.appendChild(button);
+            });
+        }
+
+        // Generuj przyciski po załadowaniu strony
+        document.addEventListener('DOMContentLoaded', generateSetButtons);
+    </script>
+    
 </body>
 
 </html>
