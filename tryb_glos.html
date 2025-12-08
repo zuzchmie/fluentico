@@ -55,19 +55,91 @@
             </header>
 
             <section class="flashcard-voice-container">
-                <div class="voice-option">BAŁWAN</div>
-                <div class="voice-option">SNOWMAN</div>
+                <div class="voice-option" id="front-card">Ładowanie...</div>
+                <div class="voice-option" id="back-card"></div>
 
                 <button class="action-button">POSŁUCHAJ AUDIO</button>
 
                 <div class="flashcard-buttons">
-                    <button>← Poprzednia</button>
-                    <button>Następna →</button>
+                    <button id="prev-btn">← Poprzednia</button>
+                    <button id="next-btn">Następna →</button>
                 </div>
             </section>
         </main>
     </div>
 
+    <script src="flashcardsData.js"></script>
+
+    <script>
+        // bez reveal card
+        let currentSet = [];
+        let currentCardIndex = 0;
+    
+        // Elementy DOM
+        const frontCard = document.getElementById('front-card');
+        const backCard = document.getElementById('back-card');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const progressInfo = document.getElementById('progress-info');
+        const pageTitle = document.getElementById('page-title');
+    
+        // Funkcja do pobierania parametru z URL
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+    
+        // Funkcja do ładowania zestawu
+        function loadFlashcardsSet() {
+            const setName = getUrlParameter('set') || 'jedzenie';
+            currentSet = getFlashcardsSet(setName);
+
+            // Aktualizuj tytuł strony
+            const displayName = setName.replace(/_/g, ' ')
+                .replace(/\b\w/g, l => l.toUpperCase());
+            pageTitle.textContent = `${displayName}`;
+            document.title = `Zestaw – ${displayName} | Fluentico`;
+
+            if (currentSet.length === 0) {
+                flashcardText.textContent = "Brak fiszek w zestawie";
+                return;
+            }
+
+            showCurrentCard();
+        }
+    
+        // Funkcja pokazująca aktualną fiszkę
+        function showCurrentCard() {
+            const card = currentSet[currentCardIndex];
+            frontCard.textContent = card.polish;
+            backCard.textContent = card.english;
+        }
+    
+        // Funkcja następnej fiszki
+        function nextCard() {
+            if (currentSet.length === 0) return;
+
+            currentCardIndex = (currentCardIndex + 1) % currentSet.length;
+            showCurrentCard();
+        }
+
+        // Funkcja poprzedniej fiszki
+        function prevCard() {
+            if (currentSet.length === 0) return;
+
+            currentCardIndex = (currentCardIndex - 1 + currentSet.length) % currentSet.length;
+            showCurrentCard();
+        }
+
+        // Event listeners
+        revealBtn.addEventListener('click', toggleReveal);
+        nextBtn.addEventListener('click', nextCard);
+        prevBtn.addEventListener('click', prevCard);
+
+        // Ładujemy zestaw po załadowaniu strony
+        document.addEventListener('DOMContentLoaded', loadFlashcardsSet);
+    </script>
+    
 </body>
 
 </html>
