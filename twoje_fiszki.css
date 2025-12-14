@@ -236,6 +236,9 @@ body {
     cursor: pointer;
     transition: all 0.3s ease-in-out;
     text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .category-button:hover {
@@ -269,7 +272,15 @@ body {
     font-size: 32px;
 }
 
+.category-icon {
+    font-size: 1.6rem;
+    color: #ffffff;
+}
 
+.category-button:hover .category-icon {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
 
 
 button:focus {
