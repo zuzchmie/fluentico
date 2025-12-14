@@ -22,7 +22,7 @@ window.flashcardsSets = {
         ]
     },
     "PODROZ": {
-        icon: "bi-plane",
+        icon: "bi-airplane",
         cards: [
         { polish: "Samolot", english: "Airplane" },
         { polish: "Lotnisko", english: "Airport" },
