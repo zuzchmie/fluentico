@@ -137,30 +137,36 @@
 
         <!-- MAIN CONTENT -->
         <main class="content-area">
-            <header class="header-section">
-                <h1 class="page-title" id="page-title">ZESTAW: JEDZENIE</h1>
-            </header>
+            <main class="content-area">
+                <header class="header-section">
+                    <a href="gotowe_zestawy.html" class="back-button">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 18L9 12L15 6" stroke="white" stroke-width="5" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </a>
 
-            <!-- Przycisk powrotu – zaraz pod nagłówkiem -->
-            <a href="gotowe_zestawy.html" class="back-link">← Powrót do kategorii</a>
+                    <h1 class="page-title" id="page-title"></h1>
 
-            <!-- Fiszka i przyciski wycentrowane -->
-            <section class="flashcards-container">
-                <div class="flashcard" id="flashcard">
-                    <p id="flashcard-text">Ładowanie...</p>
-                </div>
+                </header>
 
-                <div class="progress-info" id="progress-info">
-                    Fiszka 1 z 6
-                </div>
+                <!-- Fiszka i przyciski wycentrowane -->
+                <section class="flashcards-container">
+                    <div class="flashcard" id="flashcard">
+                        <p id="flashcard-text">Ładowanie...</p>
+                    </div>
 
-                <div class="flashcard-buttons">
-                    <button id="prev-btn">Poprzednia</button>
-                    <button id="reveal-btn">Odkryj fiszkę</button>
-                    <button id="next-btn">Następna</button>
-                </div>
-            </section>
-        </main>
+                    <div class="progress-info" id="progress-info">
+                        Fiszka 1 z 6
+                    </div>
+
+                    <div class="flashcard-buttons">
+                        <button id="prev-btn">Poprzednia</button>
+                        <button id="reveal-btn">Odkryj fiszkę</button>
+                        <button id="next-btn">Następna</button>
+                    </div>
+                </section>
+            </main>
     </div>
 
     <!-- Dołączamy plik z danymi -->
@@ -191,11 +197,11 @@
         function loadFlashcardsSet() {
             const setName = getUrlParameter('set') || 'jedzenie';
             currentSet = getFlashcardsSet(setName);
-            
+
             // Aktualizuj tytuł strony
             const displayName = setName.replace(/_/g, ' ')
                 .replace(/\b\w/g, l => l.toUpperCase());
-            pageTitle.textContent = `ZESTAW: ${displayName}`;
+            pageTitle.textContent = `${displayName}`;
             document.title = `Zestaw – ${displayName} | Fluentico`;
 
             if (currentSet.length === 0) {
@@ -214,7 +220,7 @@
             flashcardText.textContent = currentCard.english;
             isRevealed = false;
             revealBtn.textContent = 'Odkryj fiszkę';
-            
+
             // Aktualizuj informację o postępie
             progressInfo.textContent = `Fiszka ${currentCardIndex + 1} z ${currentSet.length}`;
         }
@@ -263,4 +269,5 @@
         document.addEventListener('DOMContentLoaded', loadFlashcardsSet);
     </script>
 </body>
+
 </html>
