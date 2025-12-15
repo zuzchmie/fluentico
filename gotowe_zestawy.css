@@ -83,58 +83,22 @@ body {
     transition: all 0.3s ease-in-out;
     border: none;
     width: 100%;
-}
-
-.menu-item.darkgray {
-    background-color: #231f20;
-}
-
-.menu-item.blue {
-    background-color: #699cb5
-}
-
-.menu-item.lazur {
-    background-color: #477890;
-}
-
-.menu-item.darkblue {
-    background-color: #365b6d
-}
-
-.menu-item.darkgray:hover {
-    background-color: #302b2c;
-    transform: scale(1.02);
-}
-
-.menu-item.blue:hover {
-    background-color: #71a8c4;
-    transform: scale(1.02);
-}
-
-.menu-item.lazur:hover {
-    background-color: #5186a1;
-    transform: scale(1.02);
-}
-
-.menu-item.darkblue:hover {
-    background-color: #3d677c;
-    transform: scale(1.02);
-}
-
-.menu-item.settings {
-    background-color: #231f20;
-    padding: 24px;
+    outline: 2px solid #8cb2c5;
 
 }
 
-.menu-item.settings:hover {
-    background-color: #3a3536;
+.menu-item:hover {
+    background-color: #d2d1d1;
+}
+
+.menu-item:active {
+    background-color: #d2d1d1;
 }
 
 .menu-text.large {
     font-size: 30px;
     line-height: 44px;
-    color: #ffffff;
+    color: #000000;
 }
 
 
@@ -361,69 +325,7 @@ button:focus {
     }
 }
 
-/* Aktywny przycisk w sidebarze */
-.menu-item.active {
-    background-color: #365b6d;
-    /* kontrastujące tło */
-}
 
-.menu-item.active .menu-text {
-    color: #ffffff;
-    /* biały tekst */
-}
-
-/* Ustawienia zawsze białe */
-.menu-item.settings .menu-text {
-    color: #ffffff;
-}
-
-/* Jeśli chcesz spójny rozmiar czcionki sidebaru z główną stroną */
-.menu-text.large {
-    font-size: 28px;
-    /* dopasuj do głównej strony */
-}
-
-/* Drobna korekta hover dla aktywnego przycisku */
-.menu-item.active:hover {
-    background-color: #3d677c;
-    transform: scale(1.02);
-}
-
-/* ---- Naprawa sidebaru: spójny wygląd jak na innych podstronach ---- */
-
-/* Wszystkie duże teksty w sidebarze */
-.menu-text.large {
-    font-family: 'Archivo Black', Arial, sans-serif;
-    font-size: 30px;
-    /* standardowy rozmiar jak w innych podstronach */
-    line-height: 44px;
-    color: #ffffff;
-    /* zawsze biały */
-}
-
-/* Tekst w przycisku ustawień zawsze biały */
-.menu-item.settings .menu-text {
-    color: #ffffff;
-    font-family: 'Archivo Black', Arial, sans-serif;
-    font-size: 30px;
-    line-height: 44px;
-}
-
-/* Aktywny przycisk w sidebarze */
-.menu-item.active {
-    background-color: #365b6d;
-    /* tło kontrastowe */
-}
-
-.menu-item.active .menu-text {
-    color: #ffffff;
-}
-
-/* Hover dla aktywnego przycisku */
-.menu-item.active:hover {
-    background-color: #3d677c;
-    transform: scale(1.02);
-}
 
 /* Wyłączenie podkreśleń dla przycisków kategorii */
 .category-button,
