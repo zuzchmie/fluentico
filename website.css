@@ -84,7 +84,7 @@ body {
     line-height: 22px;
     text-align: center;
     text-decoration: underline;
-    color: #ffffff;
+    color: #000;
     border-radius: 24px;
     padding: 17px;
     width: 100%;
@@ -94,111 +94,26 @@ body {
     transition: all 0.3s ease-in-out;
     text-decoration: none;
     display: inline-block;
+    background-color: #efe6dd;
+    outline: 2px solid #8cb2c5;
 }
-
-.fiszki-button {
-    background-color: #699cb5;
-}
-
-.quiz-button {
-    background-color: #477890;
-}
-
-.testy-button {
-    background-color: #365b6d;
-}
-
-.settings-button {
-    background-color: #231f20;
-    margin-top: 33px;
-    width: 100%;
-    max-width: 100%;
-}
-
-.recent-section-title {
-    font-size: 20px;
-    font-family: 'Archivo Black', Arial, sans-serif;
-    font-weight: 400;
-    line-height: 22px;
-    text-align: center;
-    color: #231f20;
-    width: auto;
-    margin-top: 64px;
-    margin-bottom: 9px;
-}
-
-.recent-item {
-    background-color: #a3333d;
-    border-radius: 24px;
-    margin-top: 9px;
-    width: 100%;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.recent-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    gap: 16px;
-}
-
-.recent-main-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
-
-.test-title {
-    font-size: 20px;
-    font-family: 'Archivo Black', Arial, sans-serif;
-    font-weight: 400;
-    line-height: 22px;
-    text-align: center;
-    color: #ffffff;
-    margin-left: 14px;
-}
-
-.progress-square {
-    background-color: #a3333d;
-    width: 51px;
-    height: 51px;
-    flex-shrink: 0;
-}
-
-.progress-text {
-    font-size: 15px;
-    font-family: 'Archivo Black', Arial, sans-serif;
-    font-weight: 400;
-    line-height: 16px;
-    text-align: center;
-    color: #231f20;
-    border-radius: 24px;
-    padding: 14px 17px 17px 17px;
-    background-color: #dd9299;
-    margin-left: -17px;
-}
-
 
 .nav-button:hover,
 .nav-link:hover {
+    background-color: #d2d1d1;
     transform: scale(1.05);
     opacity: 0.9;
 }
 
 .nav-button:active,
 .nav-link:active {
+    background-color: #d2d1d1;
     transform: scale(0.95);
 }
 
 .nav-button:focus,
 .nav-link:focus {
+    background-color: #d2d1d1;
     outline: 2px solid #ffffff;
     outline-offset: 2px;
 }
