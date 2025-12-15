@@ -181,7 +181,33 @@ body {
     transform: translateY(0);
 }
 
+.add-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    height: 90px;
+    background-color: #dd9299;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 22px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    margin-left: 830px;
+}
 
+.add-button:hover {
+    background-color: #e6c0c4;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.add-button svg {
+    width: 48px;
+    /* rozmiar strzałki */
+    height: 48px;
+}
 
 .category-text {
     font-size: 24px;
