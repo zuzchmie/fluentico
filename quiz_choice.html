@@ -128,6 +128,12 @@
         <!-- MAIN CONTENT -->
         <main class="content-area">
             <header class="header-section">
+                <a href="quiz_dnia.html" class="back-button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 18L9 12L15 6" stroke="white" stroke-width="5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </a>
                 <h1 class="page-title">QUIZ DNIA</h1>
             </header>
 
@@ -144,7 +150,6 @@
                 </div>
 
                 <div class="flashcard-buttons">
-                    <button id="prev-btn">Poprzednie</button>
                     <button id="next-btn">Następne</button>
                 </div>
             </section>
@@ -155,26 +160,37 @@
     <script src="quizData.js"></script>
 
     <script>
-        let quiz = [];
+        let currentSet = [];
         let currentIndex = 0;
+        let score = 0;
+        // This object will store whether each question index was answered correctly: {0: true, 1: false}
+        let userAnswers = {};
 
-        const flashcard = document.querySelector(".flashcard p");
+        const flashcardText = document.getElementById("question-text");
         const answersContainer = document.querySelector(".answers-container");
         const nextBtn = document.getElementById("next-btn");
-        const prevBtn = document.getElementById("prev-btn");
 
-        nextBtn.addEventListener("click", nextQuestion);
-        prevBtn.addEventListener("click", prevQuestion);
 
-        function loadQuiz() {
-            quiz = getRandom15(); // ← LOSOWE 15 PYTAŃ
+        if (nextBtn) nextBtn.addEventListener("click", nextQuestion);
+
+
+        function loadSet() {
+            // Use your existing getRandom15 function from testData.js
+            currentSet = getRandom15();
+
+            if (currentSet.length === 0) {
+                flashcardText.textContent = "Brak pytań w tym teście";
+                return;
+            }
+
             showQuestion();
         }
 
         function showQuestion() {
-            const card = quiz[currentIndex];
-            flashcard.textContent = card.polish;
+            const card = currentSet[currentIndex];
+            flashcardText.textContent = card.polish;
 
+            // Create the answer options
             const answers = [
                 { text: card.correct, correct: true },
                 { text: card.wrong1, correct: false },
@@ -182,34 +198,89 @@
             ].sort(() => Math.random() - 0.5);
 
             answersContainer.innerHTML = "";
+
             answers.forEach(ans => {
                 const btn = document.createElement("button");
                 btn.classList.add("answer-button");
                 btn.textContent = ans.text;
 
-                btn.addEventListener("click", () => {
-                    if (ans.correct) {
-                        btn.style.backgroundColor = "green";
-                    } else {
-                        btn.style.backgroundColor = "red";
-                    }
-                });
+                // If the user already answered this specific question, style the buttons accordingly
+                if (userAnswers.hasOwnProperty(currentIndex)) {
+                    styleDisabledButton(btn, ans, card);
+                } else {
+                    btn.addEventListener("click", () => handleAnswerClick(btn, ans, card));
+                }
 
                 answersContainer.appendChild(btn);
             });
         }
 
+        function handleAnswerClick(selectedBtn, answerObj, card) {
+            // Record the answer so they can't click again
+            userAnswers[currentIndex] = answerObj.correct;
+
+            if (answerObj.correct) {
+                selectedBtn.style.backgroundColor = "#4CAF50"; // Green
+                score++;
+            } else {
+                selectedBtn.style.backgroundColor = "#F44336"; // Red
+                highlightCorrect();
+            }
+
+            // Briefly disable all buttons after a click
+            const allBtns = answersContainer.querySelectorAll('button');
+            allBtns.forEach(btn => btn.style.pointerEvents = "none");
+
+            // Automatically move to next after a short delay (optional)
+            // setTimeout(nextQuestion, 1000); 
+        }
+
+        function highlightCorrect() {
+            const card = currentSet[currentIndex];
+            const buttons = answersContainer.querySelectorAll('.answer-button');
+            buttons.forEach(btn => {
+                if (btn.textContent === card.correct) {
+                    btn.style.border = "4px solid #4CAF50";
+                }
+            });
+        }
+        function styleDisabledButton(btn, ans, card) {
+            btn.style.pointerEvents = "none";
+            btn.style.opacity = "0.7";
+            // If this was the correct answer, highlight it
+            if (ans.correct) {
+                btn.style.border = "3px solid #4CAF50";
+            }
+        }
+
         function nextQuestion() {
-            currentIndex = (currentIndex + 1) % quiz.length;
-            showQuestion();
+            if (currentIndex < currentSet.length - 1) {
+                currentIndex++;
+                showQuestion();
+            } else {
+                showResults();
+            }
         }
 
         function prevQuestion() {
-            currentIndex = (currentIndex - 1 + quiz.length) % quiz.length;
-            showQuestion();
+            if (currentIndex > 0) {
+                currentIndex--;
+                showQuestion();
+            }
         }
 
-        document.addEventListener("DOMContentLoaded", loadQuiz);
+        function showResults() {
+            const container = document.querySelector(".flashcards-container");
+            container.innerHTML = `
+        <div class="flashcard">
+            <p>Test Ukończony!<br>Wynik: ${score} / ${currentSet.length}</p>
+        </div>
+        <div class="flashcard-buttons">
+            
+    `;
+        }
+
+        document.addEventListener("DOMContentLoaded", loadSet);
     </script>
 
 </body>
