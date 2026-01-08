@@ -57,7 +57,8 @@
                 <div class="voice-option" id="front-card">Ładowanie...</div>
                 <div class="voice-option" id="back-card"></div>
 
-                <button class="action-button">POSŁUCHAJ AUDIO</button>
+                <button class="action-button" id="speak-btn">POSŁUCHAJ AUDIO</button>
+                <button class="action-button" id="stop-btn" style="background:#b04747;">STOP</button>
 
                 <div class="flashcard-buttons">
                     <button id="prev-btn">← Poprzednia</button>
@@ -72,53 +73,81 @@
     <script>
         let currentSet = [];
         let currentCardIndex = 0;
-    
+
         const frontCard = document.getElementById('front-card');
         const backCard = document.getElementById('back-card');
         const nextBtn = document.getElementById('next-btn');
         const prevBtn = document.getElementById('prev-btn');
-    
+        const speakBtn = document.getElementById('speak-btn');
+        const stopBtn = document.getElementById('stop-btn');
+
         function getUrlParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
         }
-    
+
         function loadFlashcardsSet() {
-            const setName = getUrlParameter('set') || 'jedzenie';
+
+            const rawSetName = getUrlParameter('set') || 'JEDZENIE';
+            const setName = String(rawSetName).toUpperCase();
+
             currentSet = getFlashcardsSet(setName);
-    
+
             if (!currentSet || currentSet.length === 0) {
                 frontCard.textContent = "Brak fiszek w zestawie";
                 backCard.textContent = "";
                 return;
             }
-    
+
             showCurrentCard();
         }
-    
+
         function showCurrentCard() {
             const card = currentSet[currentCardIndex];
             frontCard.textContent = card.polish;
             backCard.textContent = card.english;
         }
-    
+
         function nextCard() {
             currentCardIndex = (currentCardIndex + 1) % currentSet.length;
             showCurrentCard();
+            stopSpeaking();
         }
-    
+
         function prevCard() {
-            currentCardIndex =
-                (currentCardIndex - 1 + currentSet.length) % currentSet.length;
+            currentCardIndex = (currentCardIndex - 1 + currentSet.length) % currentSet.length;
             showCurrentCard();
+            stopSpeaking();
         }
-    
+
+        // --- PROSTE AUDIO: czyta tylko angielski tekst z fiszki ---
+        function speakEnglish() {
+            if (!("speechSynthesis" in window)) {
+                alert("Twoja przeglądarka nie wspiera syntezy mowy.");
+                return;
+            }
+
+            const text = (backCard.textContent || "").trim();
+            if (!text) return;
+
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = "en-US";
+            window.speechSynthesis.speak(utter);
+        }
+
+        function stopSpeaking() {
+            if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+        }
+
         nextBtn.addEventListener('click', nextCard);
         prevBtn.addEventListener('click', prevCard);
-    
+        speakBtn.addEventListener('click', speakEnglish);
+        stopBtn.addEventListener('click', stopSpeaking);
+
         document.addEventListener('DOMContentLoaded', loadFlashcardsSet);
     </script>
-    
+
 </body>
 
 </html>
