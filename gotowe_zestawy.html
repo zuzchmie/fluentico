@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="gotowe_zestawy.css" />
     <title>Fluentico</title>
 </head>
@@ -63,26 +64,30 @@
     <script src="flashcardsData.js"></script>
     <script>
         // Funkcja do tworzenia przycisków zestawów
+        // teraz z dodaniem ikony
         function generateSetButtons() {
             const container = document.getElementById('sets-container');
             const sets = getAllSets();
-
+        
             sets.forEach(setName => {
                 const button = document.createElement('button');
                 button.className = 'category-button';
                 button.onclick = function () {
-                    // Przekierowanie do uniwersalnej strony z fiszkami
-                    window.location.href = `grid_zestaw.html?set=${setName}`;
+                    window.location.href = `grid_tryb_glos.html?set=${setName}`;
                 };
-
-                // Formatowanie nazwy (zamiana podkreśleń na spacje, wielka pierwsza litera)
-                const displayName = setName.replace(/_/g, ' ')
+        
+                const displayName = setName
+                    .replace(/_/g, ' ')
                     .replace(/\b\w/g, l => l.toUpperCase());
-
+        
+                const icon = document.createElement('i');
+                icon.className = `bi ${getSetIcon(setName)} category-icon`;
+        
                 const span = document.createElement('span');
                 span.className = 'category-text large';
                 span.textContent = displayName;
-
+        
+                button.appendChild(icon);
                 button.appendChild(span);
                 container.appendChild(button);
             });
