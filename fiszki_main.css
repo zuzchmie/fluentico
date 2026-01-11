@@ -181,6 +181,23 @@ body {
     transform: translateY(0);
 }
 
+.favourite-category-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.favourite-category-button i {
+    font-size: 1.6rem;
+    color: #e63946;
+}
+
+.favourite-category-button:hover i {
+    transform: scale(1.15);
+    transition: transform 0.2s ease;
+}
+
 .add-button {
     display: flex;
     align-items: center;
