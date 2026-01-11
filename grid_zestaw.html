@@ -5,6 +5,110 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="grid_zestaw.css" />
     <title>Fiszki</title>
+    <style>
+        .flashcard-item {
+            position: relative;
+        }
+        
+        .category-button {
+            position: relative;
+        }
+        
+        .delete-btn-card {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            font-size: 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+            position: absolute;
+            right: -52px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .delete-btn-card:hover {
+            background-color: #c9302c;
+        }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .modal-content h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .modal-content p {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .modal-btn-confirm {
+            background-color: #d9534f;
+            color: white;
+        }
+        
+        .modal-btn-confirm:hover {
+            background-color: #c9302c;
+        }
+        
+        .modal-btn-cancel {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+        
+        .modal-btn-cancel:hover {
+            background-color: #d0d0d0;
+        }
+    </style>
 </head>
 
 <body>
@@ -62,10 +166,21 @@
                     <!-- Tutaj będą dynamicznie generowane fiszki -->
                 </div>
             </section>
+            
+            <!-- Modal potwierdzenia usunięcia -->
+            <div class="modal-overlay" id="delete-modal">
+                <div class="modal-content">
+                    <h2>Potwierdzenie usunięcia</h2>
+                    <p id="delete-modal-text">Czy na pewno chcesz usunąć tę fiszkę?</p>
+                    <div class="modal-buttons">
+                        <button class="modal-btn modal-btn-cancel" onclick="closeDeleteModal()">Anuluj</button>
+                        <button class="modal-btn modal-btn-confirm" onclick="confirmDelete()">Usuń</button>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
-    <!-- Dołączamy plik z danymi -->
     <script src="flashcardsData.js"></script>
     <script>
         // Funkcja do pobierania parametru z URL
@@ -76,39 +191,114 @@
 
         // Funkcja do generowania fiszek
         function generateFlashcards() {
+            loadCustomFlashcards();
             const setName = getUrlParameter('set');
             const flashcards = getFlashcardsSet(setName);
             const container = document.getElementById('flashcards-container');
             const titleElement = document.getElementById('set-title');
             const startButton = document.getElementById('start-button');
 
-
             // Ustawiamy tytuł zestawu
             const displayName = setName.replace(/_/g, ' ')
                 .replace(/\b\w/g, l => l.toUpperCase());
             titleElement.textContent = displayName;
 
+            // Pobierz custom fiszki dla tego zestawu
+            const customCards = JSON.parse(localStorage.getItem('customFlashcards')) || {};
+            const customForThisSet = customCards[setName] || [];
+            const originalSize = flashcards.length - customForThisSet.length;
+
             // Generujemy fiszki
-            flashcards.forEach(card => {
-                const flashcardElement = document.createElement('div');
-                flashcardElement.className = 'category-button';
-                flashcardElement.innerHTML = `
-                    <div class="split-left">
-                        <span class="category-text small">${card.polish}</span>
-                    </div>
-                    <div class="split-right">
-                        <span class="category-text small">${card.english}</span>
-                    </div>
-                `;
-                container.appendChild(flashcardElement);
+            flashcards.forEach((card, index) => {
+                // Sprawdź czy to custom fiszka
+                const isCustom = index >= originalSize;
+                
+                if (isCustom) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'flashcard-item';
+                    
+                    const flashcardElement = document.createElement('div');
+                    flashcardElement.className = 'category-button';
+                    flashcardElement.innerHTML = `
+                        <div class="split-left">
+                            <span class="category-text small">${card.polish}</span>
+                        </div>
+                        <div class="split-right">
+                            <span class="category-text small">${card.english}</span>
+                        </div>
+                    `;
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-btn-card';
+                    deleteBtn.textContent = '✕';
+                    deleteBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        deleteCard(setName, index, card.polish, card.english);
+                    };
+                    
+                    wrapper.appendChild(flashcardElement);
+                    wrapper.appendChild(deleteBtn);
+                    container.appendChild(wrapper);
+                } else {
+                    const flashcardElement = document.createElement('div');
+                    flashcardElement.className = 'category-button';
+                    flashcardElement.innerHTML = `
+                        <div class="split-left">
+                            <span class="category-text small">${card.polish}</span>
+                        </div>
+                        <div class="split-right">
+                            <span class="category-text small">${card.english}</span>
+                        </div>
+                    `;
+                    container.appendChild(flashcardElement);
+                }
             });
 
             // Ustawiamy akcję dla przycisku "Rozpocznij"
             startButton.onclick = function () {
                 const setName = getUrlParameter('set');
-                // Przekierowanie do strony z fiszkami z parametrem zestawu
                 window.location.href = `zestaw_fiszki.html?set=${setName}`;
             };
+        }
+
+        // Funkcja do usuwania karty
+        function deleteCard(setName, index, polish, english) {
+            // Pokaż modal zamiast confirm()
+            window.pendingDelete = {
+                setName: setName,
+                polish: polish,
+                english: english
+            };
+            
+            document.getElementById('delete-modal-text').textContent = 
+                `Czy na pewno chcesz usunąć fiszkę: "${polish}" - "${english}"?`;
+            document.getElementById('delete-modal').classList.add('active');
+        }
+        
+        // Zamknij modal
+        function closeDeleteModal() {
+            document.getElementById('delete-modal').classList.remove('active');
+            window.pendingDelete = null;
+        }
+        
+        // Potwierdź usunięcie
+        function confirmDelete() {
+            if (!window.pendingDelete) return;
+            
+            const { setName, polish, english } = window.pendingDelete;
+            
+            // Usuń z localStorage
+            const customCards = JSON.parse(localStorage.getItem('customFlashcards')) || {};
+            if (customCards[setName]) {
+                customCards[setName] = customCards[setName].filter(card => 
+                    !(card.polish === polish && card.english === english)
+                );
+                localStorage.setItem('customFlashcards', JSON.stringify(customCards));
+            }
+            
+            // Zamknij modal i odśwież stronę
+            closeDeleteModal();
+            location.reload();
         }
 
         // Generuj fiszki po załadowaniu strony

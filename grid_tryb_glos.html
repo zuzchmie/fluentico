@@ -120,6 +120,7 @@
 
         // Funkcja do generowania fiszek
         function generateFlashcards() {
+            loadCustomFlashcards();
             const setName = getUrlParameter('set');
             const flashcards = getFlashcardsSet(setName);
             const container = document.getElementById('flashcards-container');

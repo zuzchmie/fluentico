@@ -73,3 +73,27 @@ function getAllSets() {
 function getSetIcon(setName) {
     return flashcardsSets[setName]?.icon || "bi-collection";
 }
+
+// Funkcja do dodawania nowej fiszki do zestawu (w pamięci)
+function addFlashcardToSet(setName, polish, english) {
+    if (flashcardsSets[setName] && flashcardsSets[setName].cards) {
+        flashcardsSets[setName].cards.push({
+            polish: polish,
+            english: english
+        });
+        return true;
+    }
+    return false;
+}
+
+// Załaduj custom fiszki z localStorage przy starcie
+function loadCustomFlashcards() {
+    const customCards = JSON.parse(localStorage.getItem('customFlashcards')) || {};
+    
+    for (const setName in customCards) {
+        if (window.flashcardsSets[setName]) {
+            window.flashcardsSets[setName].cards.push(...customCards[setName]);
+        }
+    }
+}
+

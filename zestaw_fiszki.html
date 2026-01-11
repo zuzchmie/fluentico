@@ -195,6 +195,7 @@
 
         // Funkcja do ładowania zestawu
         function loadFlashcardsSet() {
+            loadCustomFlashcards();
             const setName = getUrlParameter('set') || 'jedzenie';
             currentSet = getFlashcardsSet(setName);
 

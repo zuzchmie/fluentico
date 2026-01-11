@@ -75,6 +75,18 @@
             transform: scale(0.98);
         }
 
+        .delete-btn {
+            background-color: #d9534f;
+            font-size: 18px;
+            padding: 10px 16px;
+        }
+
+        .delete-btn:hover {
+            background-color: #c9302c;
+        }
+
+        .progress-info {
+
         .progress-info {
             font-size: 18px;
             color: #666;
@@ -182,6 +194,7 @@
 
         // Funkcja do ładowania zestawu
         function loadFlashcardsSet() {
+            loadCustomFlashcards();
             const setName = getUrlParameter('set') || 'jedzenie';
             currentSet = getFlashcardsSet(setName);
 

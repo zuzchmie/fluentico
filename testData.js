@@ -94,3 +94,10 @@ function getAllSets() {
 function getSetIcon(setName) {
     return flashcardsSets[setName]?.icon || "bi-collection";
 }
+
+// Załaduj custom fiszki z localStorage przy starcie (dla testów)
+function loadCustomFlashcards() {
+    // Testy nie ładują custom fiszek z localStorage
+    // bo mają inną strukturę (correct, wrong1, wrong2)
+    return;
+}

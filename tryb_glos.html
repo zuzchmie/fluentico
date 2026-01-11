@@ -89,6 +89,7 @@
         function loadFlashcardsSet() {
 
             const rawSetName = getUrlParameter('set') || 'JEDZENIE';
+            loadCustomFlashcards();
             const setName = String(rawSetName).toUpperCase();
 
             currentSet = getFlashcardsSet(setName);

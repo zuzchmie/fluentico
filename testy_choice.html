@@ -201,6 +201,7 @@
         }
 
         function loadSet() {
+            loadCustomFlashcards();
             const setName = getUrlParameter("set") || "jedzenie";
             const fullData = getTestSet(setName);
 

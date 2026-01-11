@@ -53,22 +53,162 @@
 
         <section class="flashcard-voice-container">
 
-            <div class="voice-option">Dodaj przód karty</div>
-            <div class="voice-option">Dodaj tył karty</div>
+            <input type="text" id="front-input" class="voice-option" placeholder="Dodaj przód karty" />
+            <input type="text" id="back-input" class="voice-option" placeholder="Dodaj tył karty" />
 
         <!-- Przycisk Dodaj audio i Dodaj obrazek w jednej linii pod fiszką -->
             <div class="insert-buttons">
                 <button class="action-button">DODAJ AUDIO</button>
-                <button class="action-button">WYBIERZ ZESTAW</button>
+                <button class="action-button" id="select-set-btn">WYBIERZ ZESTAW</button>
                 <button class="action-button">DODAJ OBRAZEK</button>
             </div>
 
+            <!-- Dropdown menu dla zestawów (ukryty domyślnie) -->
+            <div id="sets-dropdown" class="sets-dropdown" style="display: none;">
+                <div id="sets-list"></div>
+            </div>
+
             <div class="flashcard-buttons">
-                <button>ZAPISZ</button>
+                <button id="save-btn">ZAPISZ</button>
+            </div>
+            
+            <!-- Komunikat o zapisaniu -->
+            <div id="save-message" class="save-message" style="display: none;">
+                Zapisano Fiszkę
             </div>
         </section>
 
     </main>
 </div>
+
+<!-- Dołączamy plik z danymi fiszek -->
+<script src="flashcardsData.js"></script>
+
+<script>
+    // Stan aplikacji
+    let selectedSet = null;
+
+    // Elementy DOM
+    const frontInput = document.getElementById('front-input');
+    const backInput = document.getElementById('back-input');
+    const selectSetBtn = document.getElementById('select-set-btn');
+    const setsDropdown = document.getElementById('sets-dropdown');
+    const setsList = document.getElementById('sets-list');
+    const saveBtn = document.getElementById('save-btn');
+
+    // Inicjalizacja — generowanie listy zestawów w dropdown
+    function initializeSetsDropdown() {
+        const sets = getAllSets();
+        setsList.innerHTML = ''; // Wyczyszczenie poprzedniej listy
+        
+        sets.forEach(setName => {
+            const setItem = document.createElement('div');
+            setItem.className = 'set-item';
+            setItem.textContent = setName;
+            
+            setItem.addEventListener('click', () => selectSet(setName));
+            setsList.appendChild(setItem);
+        });
+    }
+
+    // Wybór zestawu
+    function selectSet(setName) {
+        selectedSet = setName;
+        selectSetBtn.textContent = setName;
+        setsDropdown.style.display = 'none'; // Zamknięcie dropdown
+    }
+
+    // Otwarcie/zamknięcie dropdown
+    selectSetBtn.addEventListener('click', () => {
+        const isVisible = setsDropdown.style.display === 'block';
+        setsDropdown.style.display = isVisible ? 'none' : 'block';
+    });
+
+    // Zamknięcie dropdown po kliknięciu poza nim
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.action-button') && !e.target.closest('.sets-dropdown')) {
+            setsDropdown.style.display = 'none';
+        }
+    });
+
+    // Obsługa przycisku ZAPISZ
+    saveBtn.addEventListener('click', () => {
+        const frontText = frontInput.value.trim();
+        const backText = backInput.value.trim();
+
+        if (!frontText || !backText) {
+            alert('Proszę wypełnić oba pola: przód i tył karty!');
+            return;
+        }
+
+        if (!selectedSet) {
+            alert('Proszę wybrać zestaw!');
+            return;
+        }
+
+        // Dodaj nową fiszkę do zestawu
+        addFlashcardToSet(selectedSet, backText, frontText);
+
+        // Wyświetl komunikat o zapisaniu
+        const saveMessage = document.getElementById('save-message');
+        saveMessage.style.display = 'block';
+        // Resetuj animację
+        saveMessage.style.animation = 'none';
+        setTimeout(() => {
+            saveMessage.style.animation = 'fadeInOut 3s ease-in-out';
+        }, 10);
+        
+        // Ukryj komunikat po animacji
+        setTimeout(() => {
+            saveMessage.style.display = 'none';
+        }, 3000);
+
+        // Czyszczenie formularza
+        frontInput.value = '';
+        backInput.value = '';
+        selectedSet = null;
+        selectSetBtn.textContent = 'WYBIERZ ZESTAW';
+    });
+
+    // Funkcja do dodawania nowej fiszki do zestawu
+    function addFlashcardToSet(setName, polish, english) {
+        // Dodaj do obiektu window.flashcardsSets (w pamięci przeglądarki)
+        if (window.flashcardsSets[setName]) {
+            window.flashcardsSets[setName].cards.push({
+                polish: polish,
+                english: english
+            });
+        }
+
+        // Zapisz do localStorage (zachowuje dane między sesjami)
+        const customCards = JSON.parse(localStorage.getItem('customFlashcards')) || {};
+        if (!customCards[setName]) {
+            customCards[setName] = [];
+        }
+        customCards[setName].push({
+            polish: polish,
+            english: english
+        });
+        localStorage.setItem('customFlashcards', JSON.stringify(customCards));
+    }
+
+    // Załaduj custom fiszki z localStorage przy starcie
+    function loadCustomFlashcards() {
+        const customCards = JSON.parse(localStorage.getItem('customFlashcards')) || {};
+        
+        for (const setName in customCards) {
+            if (window.flashcardsSets[setName]) {
+                window.flashcardsSets[setName].cards.push(...customCards[setName]);
+            }
+        }
+    }
+
+    // Inicjalizacja przy załadowaniu strony
+    document.addEventListener('DOMContentLoaded', () => {
+        loadCustomFlashcards(); // Załaduj fiszki z localStorage
+        initializeSetsDropdown();
+    });
+</script>
+
 </body>
 </html>
