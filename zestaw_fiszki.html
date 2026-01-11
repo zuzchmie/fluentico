@@ -161,9 +161,9 @@
                     </div>
 
                     <div class="flashcard-buttons">
-                        <button id="prev-btn">Poprzednia</button>
+                        <button id="prev-btn">← Poprzednia</button>
                         <button id="reveal-btn">Odkryj fiszkę</button>
-                        <button id="next-btn">Następna</button>
+                        <button id="next-btn">Następna →</button>
                     </div>
                 </section>
             </main>
@@ -218,7 +218,7 @@
             if (mode === 'favourites') {
                 currentSet = getFavouriteFlashcards();
                 pageTitle.textContent = "Ulubione";
-                document.title = "Ulubione fiszki;
+                document.title = "Ulubione fiszki";
             } else {
                 currentSet = getFlashcardsSet(setName);
         
