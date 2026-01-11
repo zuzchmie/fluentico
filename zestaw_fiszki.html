@@ -193,25 +193,52 @@
             return urlParams.get(name);
         }
 
+        // teraz obsługuje też naukę tylko ulubionych fiszek
+        function getFavourites() {
+            return JSON.parse(localStorage.getItem("favourites")) || [];
+        }
+        
+        function getFavouriteFlashcards() {
+            const favs = getFavourites();
+        
+            return favs.map(id => {
+                const [, polish, english] = id.split("-");
+                return { polish, english };
+            });
+        }
+
         // Funkcja do ładowania zestawu
+        // teraz obsługuje też mode='favourites' dla nauki tylko polubionych fiszek
         function loadFlashcardsSet() {
             loadCustomFlashcards();
+        
+            const mode = getUrlParameter('mode');
             const setName = getUrlParameter('set') || 'jedzenie';
-            currentSet = getFlashcardsSet(setName);
-
-            // Aktualizuj tytuł strony
-            const displayName = setName.replace(/_/g, ' ')
-                .replace(/\b\w/g, l => l.toUpperCase());
-            pageTitle.textContent = `${displayName}`;
-            document.title = `Zestaw – ${displayName} | Fluentico`;
-
+        
+            if (mode === 'favourites') {
+                currentSet = getFavouriteFlashcards();
+                pageTitle.textContent = "Ulubione";
+                document.title = "Ulubione fiszki;
+            } else {
+                currentSet = getFlashcardsSet(setName);
+        
+                const displayName = setName.replace(/_/g, ' ')
+                    .replace(/\b\w/g, l => l.toUpperCase());
+        
+                pageTitle.textContent = displayName;
+                document.title = `Zestaw – ${displayName} | Fluentico`;
+            }
+        
             if (currentSet.length === 0) {
-                flashcardText.textContent = "Brak fiszek w zestawie";
+                flashcardText.textContent = "Brak fiszek do nauki";
+                progressInfo.textContent = "";
                 return;
             }
-
+        
+            currentCardIndex = 0;
             showCurrentCard();
         }
+
 
         // Funkcja pokazująca aktualną fiszkę
         function showCurrentCard() {
