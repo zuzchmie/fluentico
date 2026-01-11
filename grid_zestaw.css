@@ -417,19 +417,19 @@ button:focus {
     align-items: center;
     justify-content: center;
     padding: 8px;
-    transition: transform 0.2s ease, color 0.2s ease;
+    transition: transform 0.2s ease;
 }
 
 .like-button:hover {
     transform: scale(1.2);
 }
 
-.like-button.liked i {
-    color: ##a3333d;
-}
-
 .like-button i {
     pointer-events: none;
+}
+
+.like-button:focus {
+    outline: none;
 }
 
 
