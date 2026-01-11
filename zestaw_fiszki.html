@@ -294,7 +294,19 @@
         flashcardElement.addEventListener('click', toggleReveal);
 
         // Ładujemy zestaw po załadowaniu strony
-        document.addEventListener('DOMContentLoaded', loadFlashcardsSet);
+        document.addEventListener('DOMContentLoaded', () => {
+            const backButton = document.querySelector('.back-button');
+            const mode = getUrlParameter('mode');
+        
+            if (mode === 'favourites') {
+                backButton.href = "grid_ulubione.html";
+            } else {
+                backButton.href = "gotowe_zestawy.html";
+            }
+        
+            loadFlashcardsSet();
+        });
+
     </script>
 </body>
 
