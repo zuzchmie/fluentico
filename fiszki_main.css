@@ -181,19 +181,19 @@ body {
     transform: translateY(0);
 }
 
-.favourite-category-button {
+.icon-category-button {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
 }
 
-.favourite-category-button i {
+.icon-category-button i {
     font-size: 1.6rem;
     color: #ffffff;
 }
 
-.favourite-category-button:hover i {
+.icon-category-button:hover i {
     transform: scale(1.15);
     transition: transform 0.2s ease;
 }
