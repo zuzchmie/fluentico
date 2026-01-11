@@ -137,14 +137,13 @@ body {
 }
 
 .page-title {
-    text-align: justify;
     font-size: 48px;
     font-family: 'Geologica', Arial, sans-serif;
     font-weight: 700;
     line-height: 60px;
     text-align: center;
     color: #000000;
-    margin-left: 200px;
+    margin-left: 60px;
 }
 
 /* make the title a positioning context and place the button relative to it
