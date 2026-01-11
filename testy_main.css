@@ -211,6 +211,18 @@ body {
     line-height: 31px;
 }
 
+.category-icon {
+    font-size: 1.6rem;
+    color: #ffffff;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+}
+
+.category-button:hover .category-icon {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
 
 button:focus {
     outline: 2px solid #699cb5;
