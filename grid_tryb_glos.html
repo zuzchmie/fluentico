@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="grid_zestaw.css" />
     <title>Tryb głosowy – lista fiszek</title>
     <style>
@@ -109,6 +110,14 @@
             return urlParams.get(name);
         }
 
+        function getFavourites() {
+            return JSON.parse(localStorage.getItem("favourites")) || [];
+        }
+
+        function saveFavourites(favs) {
+            localStorage.setItem("favourites", JSON.stringify(favs));
+        }
+
         // Funkcja do generowania fiszek
         function generateFlashcards() {
             const setName = getUrlParameter('set');
@@ -133,8 +142,42 @@
                     <div class="split-right">
                         <span class="category-text small">${card.english}</span>
                     </div>
+                    <button class="like-button" title="Dodaj do ulubionych">
+                        <i class="bi bi-heart"></i>
+                    </button>
                 `;
                 container.appendChild(flashcardElement);
+
+                // funkcja polubienia
+                const likeButton = flashcardElement.querySelector('.like-button');
+                const icon = likeButton.querySelector('i');
+
+                const cardId = `${setName}-${card.polish}-${card.english}`;
+                let favourites = getFavourites();
+                
+                if (favourites.includes(cardId)) {
+                    likeButton.classList.add('liked');
+                    icon.className = 'bi bi-heart-fill';
+                }
+                
+                likeButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                
+                    let favs = getFavourites();
+                
+                    if (favs.includes(cardId)) {
+                        favs = favs.filter(id => id !== cardId);
+                        icon.className = 'bi bi-heart';
+                        likeButton.classList.remove('liked');
+                    } else {
+                        favs.push(cardId);
+                        icon.className = 'bi bi-heart-fill';
+                        likeButton.classList.add('liked');
+                    }
+                
+                    saveFavourites(favs);
+                });
+
             });
 
             // Ustawiamy akcję dla przycisku "Rozpocznij"
