@@ -116,23 +116,26 @@ body {
 
 .content-area {
     flex: 1;
-    padding: 10px 40px 40px;
+    padding: 52px 40px 40px;
     margin-left: 0;
 }
 
 .header-section {
     display: flex;
-    flex-wrap: nowrap;
+    flex-direction: row;
     align-items: center;
-    margin-bottom: 50px;
+    margin-bottom: 90px;
 }
 
 .header-row {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     width: 100%;
     margin-bottom: 86px;
+    flex-wrap: nowrap;
+    gap: 20px;
 }
 
 .back-button {
