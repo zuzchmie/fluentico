@@ -99,8 +99,7 @@
             </section>
         </main>
     </div>
-
-    <script src="flashcardsData.js"></script>
+    
     <script>
       function getFavourites() {
           return JSON.parse(localStorage.getItem("favourites")) || [];
@@ -118,6 +117,8 @@
               container.innerHTML = "<p>Brak ulubionych fiszek</p>";
               return;
           }
+
+          document.getElementById("set-title").textContent = "Twoje ulubione fiszki:";
       
           favourites.forEach(id => {
               const [setName, polish, english] = id.split("-");
@@ -150,7 +151,7 @@
       }
       
       // start nauki ulubionych fiszek - bazuje na zestaw fiszki
-      document.getElementById("start-favourites").onclick = () => {
+      document.getElementById("start-favourites-button").onclick = () => {
           window.location.href = "zestaw_fiszki.html?mode=favourites&i=0";
       };
       
