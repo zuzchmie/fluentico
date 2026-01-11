@@ -280,11 +280,6 @@ h2 {
     border-bottom-left-radius: 24px;
 }
 
-.category-button .split-right {
-    border-top-right-radius: 24px;
-    border-bottom-right-radius: 24px;
-}
-
 /* responsive: stack halves on small screens */
 @media (max-width: 640px) {
     .category-button {
@@ -303,10 +298,6 @@ h2 {
         border-top-right-radius: 24px;
     }
 
-    .category-button .split-right {
-        border-bottom-left-radius: 24px;
-        border-bottom-right-radius: 24px;
-    }
 }
 
 /* toolbar above grid (right-aligned) */
