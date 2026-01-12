@@ -119,42 +119,6 @@
     transform: scale(1.05);
 }
 
-.back-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 72px;
-    height: 72px;
-
-    background-color: #b04747;
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 22px;
-
-    margin-right: 40px;
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-.back-button:hover {
-    background-color: #b65858;
-    transform: scale(1.05);
-}
-
-.back-button svg {
-    width: 48px;
-    /* rozmiar strzałki */
-    height: 48px;
-}
-
-.header-section {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 90px;
-}
-
 /* Dropdown dla wyboru zestawów */
 .sets-dropdown {
     position: absolute;
@@ -188,15 +152,4 @@
 
 .sets-dropdown .set-item:active {
     background-color: #d0dfe8;
-}
-
-
-.page-title {
-    margin-left: 60px;
-    font-size: 85px;
-    font-family: 'Geologica', Arial, sans-serif;
-    font-weight: 700;
-    line-height: 60px;
-    text-align: center;
-    color: #000000;
 }
