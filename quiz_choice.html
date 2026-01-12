@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="gotowe_zestawy.css" />
     <title>Quiz Dnia | Fluentico</title>
 
@@ -186,6 +187,22 @@
             showQuestion();
         }
 
+        function addIcon(button, type) {
+            const icon = document.createElement("i");
+            icon.classList.add("bi");
+        
+            if (type === "correct") {
+                icon.classList.add("bi-check-circle-fill");
+                icon.style.color = "#4CAF50";
+            } else {
+                icon.classList.add("bi-x-circle-fill");
+                icon.style.color = "#F44336";
+            }
+        
+            icon.style.marginLeft = "12px";
+            button.appendChild(icon);
+        }
+
         function showQuestion() {
             const card = currentSet[currentIndex];
             flashcardText.textContent = card.polish;
@@ -221,9 +238,11 @@
 
             if (answerObj.correct) {
                 selectedBtn.style.backgroundColor = "#4CAF50"; // Green
+                addIcon(btn, "correct");
                 score++;
             } else {
                 selectedBtn.style.backgroundColor = "#F44336"; // Red
+                addIcon(btn, "wrong");
                 highlightCorrect();
             }
 
@@ -235,15 +254,18 @@
             // setTimeout(nextQuestion, 1000); 
         }
 
-        function highlightCorrect() {
+        function highlightCorrectWithIcon() {
             const card = currentSet[currentIndex];
-            const buttons = answersContainer.querySelectorAll('.answer-button');
+            const buttons = answersContainer.querySelectorAll(".answer-button");
+        
             buttons.forEach(btn => {
                 if (btn.textContent === card.correct) {
                     btn.style.border = "4px solid #4CAF50";
+                    addIcon(btn, "correct");
                 }
             });
         }
+
         function styleDisabledButton(btn, ans, card) {
             btn.style.pointerEvents = "none";
             btn.style.opacity = "0.7";
