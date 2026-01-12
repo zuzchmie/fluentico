@@ -275,6 +275,7 @@ button:focus {
     .page-title {
         font-size: 48px;
         line-height: 80px;
+        margin-left: 20px;
     }
 }
 
@@ -304,6 +305,7 @@ button:focus {
     .page-title {
         font-size: 64px;
         line-height: 100px;
+        margin-left: 30px;
     }
 
     .categories-grid {
@@ -313,8 +315,10 @@ button:focus {
 
 @media (min-width: 1024px) {
     .page-title {
-        font-size: 80px;
+        font-size: 72px;
         line-height: 120px;
+        margin-left:40px;
+        
     }
 
     .category-text {
