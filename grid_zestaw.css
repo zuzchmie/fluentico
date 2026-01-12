@@ -12,7 +12,12 @@ body {
     /*border: 5px solid #000000;*/
 }
 
-
+.main-container {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 20px);
+    position: relative;
+}
 
 
 
