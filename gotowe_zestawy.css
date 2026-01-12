@@ -166,8 +166,8 @@ body {
 
 
 .page-title {
-    margin-right: 30px;
-    font-size: 32px;
+    margin-left: 60px;
+    font-size: 48px;
     font-family: 'Geologica', Arial, sans-serif;
     font-weight: 700;
     line-height: 60px;
@@ -273,7 +273,7 @@ button:focus {
     }
 
     .page-title {
-        font-size: 48px;
+        font-size: 64px;
         line-height: 80px;
     }
 }
@@ -302,7 +302,7 @@ button:focus {
     }
 
     .page-title {
-        font-size: 64px;
+        font-size: 80px;
         line-height: 100px;
     }
 
@@ -313,7 +313,7 @@ button:focus {
 
 @media (min-width: 1024px) {
     .page-title {
-        font-size: 72px;
+        font-size: 96px;
         line-height: 120px;
     }
 
