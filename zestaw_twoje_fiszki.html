@@ -87,12 +87,20 @@
 
         .progress-info {
 
-        .progress-info {
-            font-size: 18px;
-            color: #666;
-            margin-top: 10px;
-            text-align: center;
-        }
+            .progress-info {
+                font-size: 18px;
+                color: #666;
+                margin-top: 10px;
+                text-align: center;
+            }
+
+            #fav-btn {
+                background-color: #f0ad4e;
+            }
+
+            #fav-btn.active {
+                background-color: #5cb85c;
+            }
     </style>
 </head>
 
@@ -163,6 +171,8 @@
                         <button id="prev-btn">Poprzednia</button>
                         <button id="reveal-btn">Odkryj fiszkę</button>
                         <button id="next-btn">Następna</button>
+                        <button id="fav-btn">⭐ Dodaj do ulubionych</button>
+
                     </div>
                 </section>
             </main>
@@ -221,9 +231,11 @@
             isRevealed = false;
             revealBtn.textContent = 'Odkryj fiszkę';
 
-            // Aktualizuj informację o postępie
             progressInfo.textContent = `Fiszka ${currentCardIndex + 1} z ${currentSet.length}`;
+
+            updateFavButton(); // ⭐ IMPORTANT
         }
+
 
         // Funkcja odkrywająca/ukrywająca fiszkę
         function toggleReveal() {
@@ -257,10 +269,57 @@
             showCurrentCard();
         }
 
+        function getFavourites() {
+            return JSON.parse(localStorage.getItem("favourites")) || [];
+        }
+
+        function saveFavourites(favs) {
+            localStorage.setItem("favourites", JSON.stringify(favs));
+        }
+
+        function getCurrentCardId() {
+            const setName = getUrlParameter('set') || 'jedzenie';
+            const card = currentSet[currentCardIndex];
+            return `${setName}-${card.polish}-${card.english}`;
+        }
+
+        const favBtn = document.getElementById('fav-btn');
+
+        function updateFavButton() {
+            const favs = getFavourites();
+            const id = getCurrentCardId();
+
+            if (favs.includes(id)) {
+                favBtn.textContent = "★ Usuń z ulubionych";
+                favBtn.classList.add("active");
+            } else {
+                favBtn.textContent = "☆ Dodaj do ulubionych";
+                favBtn.classList.remove("active");
+            }
+        }
+
+        function toggleFavourite() {
+            let favs = getFavourites();
+            const id = getCurrentCardId();
+
+            if (favs.includes(id)) {
+                favs = favs.filter(f => f !== id);
+            } else {
+                favs.push(id);
+            }
+
+            saveFavourites(favs);
+            updateFavButton();
+        }
+
+
+
         // Event listeners
         revealBtn.addEventListener('click', toggleReveal);
         nextBtn.addEventListener('click', nextCard);
         prevBtn.addEventListener('click', prevCard);
+        favBtn.addEventListener("click", toggleFavourite);
+
 
         // Możliwość kliknięcia w fiszkę aby ją odkryć/ukryć
         flashcardElement.addEventListener('click', toggleReveal);
