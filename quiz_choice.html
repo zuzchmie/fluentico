@@ -63,11 +63,24 @@
             cursor: pointer;
             width: 100%;
             transition: 0.3s;
+            position: relative;
+            padding-right: 56px;
         }
 
         .answer-button:hover {
             background-color: #5a8ba1;
             transform: scale(1.03);
+        }
+
+        .answer-icon {
+            color: #ffffff;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 28px;
+            opacity: 0;
+            pointer-events: none;
         }
 
         .flashcard-buttons {
@@ -109,6 +122,24 @@
             cursor: not-allowed;
             opacity: 0.7;
         }
+
+        .answer-button.correct {
+            background-color: #4CAF50;
+        }
+        
+        .answer-button.wrong {
+            background-color: #F44336;
+        }
+        
+        .answer-button.correct-show{
+            background-color: #477890;
+        }
+        
+        .answer-button.correct .answer-icon,
+        .answer-button.wrong .answer-icon,
+        .answer-button.correct-show .answer-icon {
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -123,19 +154,19 @@
             </div>
 
             <nav class="sidebar-menu" role="navigation">
-                <a href="website.html" class="menu-item darkgray" role="menuitem">
+                <a href="website.html" class="menu-item" role="menuitem">
                     <span class="menu-text large">EKRAN GŁÓWNY</span>
                 </a>
 
-                <a href="fiszki_main.html" class="menu-item blue" role="menuitem">
+                <a href="fiszki_main.html" class="menu-item" role="menuitem">
                     <span class="menu-text large">FISZKI</span>
                 </a>
 
-                <a href="quiz_dnia.html" class="menu-item lazur selected" role="menuitem">
+                <a href="quiz_dnia.html" class="menu-item selected" role="menuitem">
                     <span class="menu-text large">QUIZ DNIA</span>
                 </a>
 
-                <a href="testy_main.html" class="menu-item darkblue" role="menuitem">
+                <a href="testy_main.html" class="menu-item" role="menuitem">
                     <span class="menu-text large">TESTY</span>
                 </a>
 
@@ -174,7 +205,7 @@
                 </div>
 
                 <div class="flashcard-buttons">
-                    <button id="next-btn">Następne</button>
+                    <button id="next-btn">Następne →</button>
                 </div>
             </section>
         </main>
@@ -228,7 +259,10 @@
             answers.forEach(ans => {
                 const btn = document.createElement("button");
                 btn.className = "answer-button";
-                btn.textContent = ans.text;
+                btn.innerHTML = `
+                    <span class="answer-text">${ans.text}</span>
+                    <i class="answer-icon bi"></i>
+                `;
 
                 btn.addEventListener("click", () => handleAnswerClick(btn, ans));
 
@@ -237,49 +271,31 @@
         }
 
         function handleAnswerClick(selectedBtn, answerObj) {
-            userAnswers[currentIndex] = answerObj.correct;
+            document.querySelectorAll(".answer-button").forEach(btn => {
+                btn.style.pointerEvents = "none";
+        
+                const icon = btn.querySelector(".answer-icon");
+                const text = btn.querySelector(".answer-text").textContent.trim();
 
-            if (answerObj.correct) {
-                selectedBtn.style.backgroundColor = "#4CAF50";
-
-                score++;
-            } else {
-                selectedBtn.style.backgroundColor = "#F44336";
-
-
-            }
-
-            document.querySelectorAll(".answer-button")
-                .forEach(btn => btn.style.pointerEvents = "none");
-
+                if (btn === selectedBtn) {
+                    if (answerObj.correct) {
+                        btn.classList.add("correct");
+                        icon.classList.add("bi-check-lg");
+                        score++;
+                    } else {
+                        btn.classList.add("wrong");
+                        icon.classList.add("bi-x-lg");
+                    }
+                }
+                else if (text === currentSet[currentIndex].correct) {
+                    btn.classList.add("correct-show");
+                    icon.classList.add("bi-check-lg");
+                }
+            });
+        
             nextBtn.disabled = false;
         }
 
-        function highlightCorrect() {
-            const card = currentSet[currentIndex];
-            document.querySelectorAll(".answer-button").forEach(btn => {
-                if (btn.textContent === card.correct) {
-                    btn.style.border = "3px solid #4CAF50";
-                    addIcon(btn, "correct");
-                }
-            });
-        }
-
-        function addIcon(button, type) {
-            const icon = document.createElement("i");
-            icon.classList.add("bi");
-
-            if (type === "correct") {
-                icon.classList.add("bi-check-circle-fill");
-                icon.style.color = "#4CAF50";
-            } else {
-                icon.classList.add("bi-x-circle-fill");
-                icon.style.color = "#F44336";
-            }
-
-            icon.style.marginLeft = "10px";
-            button.appendChild(icon);
-        }
 
         function nextQuestion() {
             if (currentIndex < currentSet.length - 1) {
