@@ -6,13 +6,31 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="grid_zestaw.css" />
     <title>Ulubione fiszki</title>
+
     <style>
         .flashcard-item {
             position: relative;
         }
-        
+
         .category-button {
             position: relative;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #aaa;
+            margin-top: 40px;
+            font-size: 18px;
+        }
+
+        .menu-item.active {
+            background-color: #d2d1d1 !important;
+            /* ten sam szary co hover */
+        }
+
+        .menu-item.active .menu-text {
+            color: #000000 !important;
+            /* czarna czcionka */
         }
     </style>
 </head>
@@ -53,86 +71,108 @@
 
         <main class="content-area">
             <header class="header-section">
-                    <a href="fiszki_main.html" class="back-button">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15 18L9 12L15 6" stroke="white" stroke-width="5" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                        </svg>
-                    </a>
-                    <h1 class="page-title">ULUBIONE</h1>
+                <a href="fiszki_main.html" class="back-button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 18L9 12L15 6" stroke="white" stroke-width="5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </a>
+                <h1 class="page-title">ULUBIONE</h1>
             </header>
 
             <section class="container">
                 <div class="grid-header">
-                    <span class="category-text largeB" id="set-title">Ładowanie...</span>
-                    <button class="grid-action" type="button" id="start-favourites-button">Rozpocznij</button>
+                    <span class="category-text largeB" id="set-title">
+                        Twoje ulubione fiszki:
+                    </span>
+                    <button class="grid-action" type="button" id="start-favourites-button">
+                        Rozpocznij
+                    </button>
                 </div>
 
                 <div class="grid-container" id="flashcards-container">
-                    <!-- Tutaj będą dynamicznie generowane fiszki -->
+                    <!-- dynamiczne fiszki -->
                 </div>
             </section>
         </main>
     </div>
-    
+
     <script>
-      function getFavourites() {
-          return JSON.parse(localStorage.getItem("favourites")) || [];
-      }
-      
-      function saveFavourites(favs) {
-          localStorage.setItem("favourites", JSON.stringify(favs));
-      }
-      
-      function loadFavouriteCards() {
-          const container = document.getElementById("flashcards-container");
-          const favourites = getFavourites();
-      
-          if (favourites.length === 0) {
-              container.innerHTML = "<p>Brak ulubionych fiszek</p>";
-              return;
-          }
+        function getFavourites() {
+            return JSON.parse(localStorage.getItem("favourites")) || [];
+        }
 
-          document.getElementById("set-title").textContent = "Twoje ulubione fiszki:";
-      
-          favourites.forEach(id => {
-              const [setName, polish, english] = id.split("-");
-      
-              const card = document.createElement("div");
-              card.className = "category-button";
-              card.innerHTML = `
-                  <div class="split-left">
-                      <span class="category-text small">${polish}</span>
-                  </div>
-                  <div class="split-right">
-                      <span class="category-text small">${english}</span>
-                  </div>
-                  <button class="like-button liked" title="Usuń z ulubionych">
-                      <i class="bi bi-heart-fill"></i>
-                  </button>
-              `;
-      
-              const likeBtn = card.querySelector(".like-button");
-      
-              likeBtn.addEventListener("click", (e) => {
-                  e.stopPropagation();
-                  const updated = getFavourites().filter(f => f !== id);
-                  saveFavourites(updated);
-                  card.remove();
-              });
-      
-              container.appendChild(card);
-          });
-      }
-      
-      // start nauki ulubionych fiszek - bazuje na zestaw fiszki
-      document.getElementById("start-favourites-button").onclick = () => {
-          window.location.href = "zestaw_fiszki.html?mode=favourites&i=0";
-      };
-      
-      document.addEventListener("DOMContentLoaded", loadFavouriteCards);
-</script>
+        function saveFavourites(favs) {
+            localStorage.setItem("favourites", JSON.stringify(favs));
+        }
 
+        function loadFavouriteCards() {
+            const container = document.getElementById("flashcards-container");
+            const favourites = getFavourites();
+            const startBtn = document.getElementById("start-favourites-button");
+            const title = document.getElementById("set-title");
+
+            container.innerHTML = "";
+            startBtn.style.display = "inline-block";
+
+            if (favourites.length === 0) {
+                title.textContent = "Nie masz jeszcze ulubionych fiszek";
+                startBtn.style.display = "none";
+
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>Dodaj fiszki do ulubionych, aby rozpocząć naukę.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            title.textContent = "Twoje ulubione fiszki:";
+
+            favourites.forEach(id => {
+                const [setName, polish, english] = id.split("-");
+
+                const card = document.createElement("div");
+                card.className = "category-button";
+
+                card.innerHTML = `
+                    <div class="split-left">
+                        <span class="category-text small">${polish}</span>
+                    </div>
+                    <div class="split-right">
+                        <span class="category-text small">${english}</span>
+                    </div>
+                    <button class="like-button liked" title="Usuń z ulubionych">
+                        <i class="bi bi-heart-fill"></i>
+                    </button>
+                `;
+
+                const likeBtn = card.querySelector(".like-button");
+
+                likeBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+
+                    const updated = getFavourites().filter(f => f !== id);
+                    saveFavourites(updated);
+                    card.remove();
+
+                    if (updated.length === 0) {
+                        loadFavouriteCards();
+                    }
+                });
+
+                container.appendChild(card);
+            });
+        }
+
+        document.getElementById("start-favourites-button").onclick = () => {
+            const favs = getFavourites();
+            if (favs.length === 0) return;
+            window.location.href = "zestaw_fiszki.html?mode=favourites&i=0";
+        };
+
+        document.addEventListener("DOMContentLoaded", loadFavouriteCards);
+    </script>
 
 </body>
 
