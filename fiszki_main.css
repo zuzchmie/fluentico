@@ -85,6 +85,7 @@ body {
     border: none;
     width: 100%;
     outline: 2px solid #8cb2c5;
+    position: relative;
 
 }
 
@@ -102,6 +103,16 @@ body {
     color: #000000;
 }
 
+.menu-item.selected::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 100%;
+    background-color: #365b6d;
+    border-radius: 8px 0 0 8px;
+}
 
 
 .divider {
