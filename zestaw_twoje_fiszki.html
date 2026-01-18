@@ -14,8 +14,6 @@
             flex-direction: column;
         }
 
-
-
         /* Kontener fiszki i przycisków – wycentrowany w pionie i poziomie */
         .flashcards-container {
             flex: 1;
@@ -75,24 +73,11 @@
             transform: scale(0.98);
         }
 
-        .delete-btn {
-            background-color: #d9534f;
-            font-size: 18px;
-            padding: 10px 16px;
-        }
-
-        .delete-btn:hover {
-            background-color: #c9302c;
-        }
-
         .progress-info {
-
-            .progress-info {
-                font-size: 18px;
-                color: #666;
-                margin-top: 10px;
-                text-align: center;
-            }
+            font-size: 18px;
+            color: #666;
+            margin-top: 10px;
+            text-align: center;
         }
     </style>
 </head>
@@ -134,41 +119,34 @@
 
         <!-- MAIN CONTENT -->
         <main class="content-area">
-            <main class="content-area">
-                <header class="header-section">
-                    <a href="twoje_fiszki.html" class="back-button">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15 18L9 12L15 6" stroke="white" stroke-width="5" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                        </svg>
-                    </a>
+            <header class="header-section">
+                <a href="twoje_fiszki.html" class="back-button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 18L9 12L15 6" stroke="white" stroke-width="5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </a>
 
-                    <h1 class="page-title" id="page-title"></h1>
+                <h1 class="page-title" id="page-title"></h1>
+            </header>
 
-                </header>
+            <!-- Fiszka i przyciski wycentrowane -->
+            <section class="flashcards-container">
+                <div class="flashcard" id="flashcard">
+                    <p id="flashcard-text">Ładowanie...</p>
+                </div>
 
+                <div class="progress-info" id="progress-info">
+                    Fiszka 1 z 6
+                </div>
 
-
-
-                <!-- Fiszka i przyciski wycentrowane -->
-                <section class="flashcards-container">
-                    <div class="flashcard" id="flashcard">
-                        <p id="flashcard-text">Ładowanie...</p>
-                    </div>
-
-                    <div class="progress-info" id="progress-info">
-                        Fiszka 1 z 6
-                    </div>
-
-                    <div class="flashcard-buttons">
-                        <button id="prev-btn">Poprzednia</button>
-                        <button id="reveal-btn">Odkryj fiszkę</button>
-                        <button id="next-btn">Następna</button>
-                        <button id="fav-btn">⭐ Dodaj do ulubionych</button>
-
-                    </div>
-                </section>
-            </main>
+                <div class="flashcard-buttons">
+                    <button id="prev-btn">Poprzednia</button>
+                    <button id="reveal-btn">Odkryj fiszkę</button>
+                    <button id="next-btn">Następna</button>
+                </div>
+            </section>
+        </main>
     </div>
 
     <!-- Dołączamy plik z danymi -->
@@ -225,10 +203,7 @@
             revealBtn.textContent = 'Odkryj fiszkę';
 
             progressInfo.textContent = `Fiszka ${currentCardIndex + 1} z ${currentSet.length}`;
-
-
         }
-
 
         // Funkcja odkrywająca/ukrywająca fiszkę
         function toggleReveal() {
@@ -262,34 +237,10 @@
             showCurrentCard();
         }
 
-        function getFavourites() {
-            return JSON.parse(localStorage.getItem("favourites")) || [];
-        }
-
-        function saveFavourites(favs) {
-            localStorage.setItem("favourites", JSON.stringify(favs));
-        }
-
-        function getCurrentCardId() {
-            const setName = getUrlParameter('set') || 'jedzenie';
-            const card = currentSet[currentCardIndex];
-            return `${setName}-${card.polish}-${card.english}`;
-        }
-
-        const favBtn = document.getElementById('fav-btn');
-
-
-
-
-
-
-
         // Event listeners
         revealBtn.addEventListener('click', toggleReveal);
         nextBtn.addEventListener('click', nextCard);
         prevBtn.addEventListener('click', prevCard);
-        favBtn.addEventListener("click", toggleFavourite);
-
 
         // Możliwość kliknięcia w fiszkę aby ją odkryć/ukryć
         flashcardElement.addEventListener('click', toggleReveal);
