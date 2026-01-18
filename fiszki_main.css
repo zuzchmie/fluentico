@@ -103,15 +103,16 @@ body {
     color: #000000;
 }
 
+
 .menu-item.selected::after {
     content: "";
     position: absolute;
     top: 0;
     right: 0;
-    width: 8px;
+    width: 24px;
     height: 100%;
     background-color: #365b6d;
-    border-radius: 8px 0 0 8px;
+    border-radius: 0 16px 16px 0;
 }
 
 
