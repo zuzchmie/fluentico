@@ -6,6 +6,13 @@
     <title>Fluentico</title>
     <link rel="stylesheet" href="twoje_fiszki.css" />
     <link rel="stylesheet" href="tryb_glos.css" />
+    <style>
+        .progress-info {
+            font-size: 18px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -60,6 +67,7 @@
 
                 <div class="flashcard-buttons">
                     <button id="prev-btn">← Poprzednia</button>
+                    <span id="progress-info"> Fiszka 1 z 1</span>
                     <button id="next-btn">Następna →</button>
                 </div>
             </section>
@@ -78,6 +86,7 @@
         const prevBtn = document.getElementById('prev-btn');
         const speakBtn = document.getElementById('speak-btn');
         const stopBtn = document.getElementById('stop-btn');
+        const progressInfo = document.getElementById('progress-info');
 
         function getUrlParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
@@ -102,9 +111,13 @@
         }
 
         function showCurrentCard() {
+            if (currentSet.length === 0) return;
+            
             const card = currentSet[currentCardIndex];
             frontCard.textContent = card.polish;
             backCard.textContent = card.english;
+
+            progressInfo.textContent = `Fiszka ${currentCardIndex + 1} z ${currentSet.length}`;
         }
 
         function nextCard() {
