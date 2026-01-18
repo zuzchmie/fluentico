@@ -8,9 +8,13 @@
     <title>Quiz Dnia | Fluentico</title>
 
     <style>
+        .header-section {
+            margin-bottom: 20px;
+        }
+
         .content-area {
             flex: 1;
-            padding: 40px;
+            /*padding: 40px;*/
             display: flex;
             flex-direction: column;
         }
@@ -37,7 +41,7 @@
             font-family: 'Archivo Black', Arial, sans-serif;
             color: #ffffff;
             text-align: center;
-            padding: 20px;
+            /*padding: 20px;*/
         }
 
         .answers-container {
@@ -87,6 +91,23 @@
         .flashcard-buttons button:hover {
             background-color: #5a8ba1;
             transform: scale(1.05);
+        }
+
+
+
+        .progress-info {
+            font-size: 18px;
+            color: #666;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+
+        #next-btn:disabled {
+            background-color: #b5b5b5;
+            color: #f0f0f0;
+            cursor: not-allowed;
+            opacity: 0.7;
         }
     </style>
 </head>
@@ -139,7 +160,9 @@
             </header>
 
             <section class="flashcards-container">
-
+                <div class="progress-info" id="progress-info">
+                    Fiszka 1 z 6
+                </div>
                 <div class="flashcard">
                     <p id="question-text">Ładowanie quizu...</p>
                 </div>
@@ -164,50 +187,36 @@
         let currentSet = [];
         let currentIndex = 0;
         let score = 0;
-        // This object will store whether each question index was answered correctly: {0: true, 1: false}
         let userAnswers = {};
 
+        const progressInfo = document.getElementById("progress-info");
         const flashcardText = document.getElementById("question-text");
         const answersContainer = document.querySelector(".answers-container");
         const nextBtn = document.getElementById("next-btn");
 
-
-        if (nextBtn) nextBtn.addEventListener("click", nextQuestion);
-
+        nextBtn.addEventListener("click", nextQuestion);
 
         function loadSet() {
-            // Use your existing getRandom15 function from testData.js
-            currentSet = getRandom15();
-
             if (currentSet.length === 0) {
-                flashcardText.textContent = "Brak pytań w tym teście";
-                return;
+                currentSet = getRandom15(); // losujemy TYLKO raz
             }
 
+            currentIndex = 0;
+            score = 0;
+            userAnswers = {};
+
+            nextBtn.disabled = true;
             showQuestion();
-        }
-
-        function addIcon(button, type) {
-            const icon = document.createElement("i");
-            icon.classList.add("bi");
-        
-            if (type === "correct") {
-                icon.classList.add("bi-check-circle-fill");
-                icon.style.color = "#4CAF50";
-            } else {
-                icon.classList.add("bi-x-circle-fill");
-                icon.style.color = "#F44336";
-            }
-        
-            icon.style.marginLeft = "12px";
-            button.appendChild(icon);
         }
 
         function showQuestion() {
             const card = currentSet[currentIndex];
-            flashcardText.textContent = card.polish;
 
-            // Create the answer options
+            flashcardText.textContent = card.polish;
+            progressInfo.textContent = `Fiszka ${currentIndex + 1} z ${currentSet.length}`;
+
+            nextBtn.disabled = true;
+
             const answers = [
                 { text: card.correct, correct: true },
                 { text: card.wrong1, correct: false },
@@ -218,61 +227,58 @@
 
             answers.forEach(ans => {
                 const btn = document.createElement("button");
-                btn.classList.add("answer-button");
+                btn.className = "answer-button";
                 btn.textContent = ans.text;
 
-                // If the user already answered this specific question, style the buttons accordingly
-                if (userAnswers.hasOwnProperty(currentIndex)) {
-                    styleDisabledButton(btn, ans, card);
-                } else {
-                    btn.addEventListener("click", () => handleAnswerClick(btn, ans, card));
-                }
+                btn.addEventListener("click", () => handleAnswerClick(btn, ans));
 
                 answersContainer.appendChild(btn);
             });
         }
 
-        function handleAnswerClick(selectedBtn, answerObj, card) {
-            // Record the answer so they can't click again
+        function handleAnswerClick(selectedBtn, answerObj) {
             userAnswers[currentIndex] = answerObj.correct;
 
             if (answerObj.correct) {
-                selectedBtn.style.backgroundColor = "#4CAF50"; // Green
-                addIcon(btn, "correct");
+                selectedBtn.style.backgroundColor = "#4CAF50";
+
                 score++;
             } else {
-                selectedBtn.style.backgroundColor = "#F44336"; // Red
-                addIcon(btn, "wrong");
-                highlightCorrect();
+                selectedBtn.style.backgroundColor = "#F44336";
+
+
             }
 
-            // Briefly disable all buttons after a click
-            const allBtns = answersContainer.querySelectorAll('button');
-            allBtns.forEach(btn => btn.style.pointerEvents = "none");
+            document.querySelectorAll(".answer-button")
+                .forEach(btn => btn.style.pointerEvents = "none");
 
-            // Automatically move to next after a short delay (optional)
-            // setTimeout(nextQuestion, 1000); 
+            nextBtn.disabled = false;
         }
 
-        function highlightCorrectWithIcon() {
+        function highlightCorrect() {
             const card = currentSet[currentIndex];
-            const buttons = answersContainer.querySelectorAll(".answer-button");
-        
-            buttons.forEach(btn => {
+            document.querySelectorAll(".answer-button").forEach(btn => {
                 if (btn.textContent === card.correct) {
-                    btn.style.border = "4px solid #4CAF50";
+                    btn.style.border = "3px solid #4CAF50";
                     addIcon(btn, "correct");
                 }
             });
         }
 
-        function styleDisabledButton(btn, ans, card) {
-            btn.style.pointerEvents = "none";
-            btn.style.opacity = "0.7";
-            // If this was the correct answer, highlight it
-            if (ans.correct) {
-                btn.style.border = "3px solid #4CAF50";
+        function addIcon(button, type) {
+            const icon = document.createElement("i");
+            icon.classList.add("bi");
+
+            if (type === "correct") {
+                icon.classList.add("bi-check-circle-fill");
+                icon.style.color = "#4CAF50";
+            } else {
+                icon.classList.add("bi-x-circle-fill");
+                icon.style.color = "#F44336";
             }
+
+            icon.style.marginLeft = "10px";
+            button.appendChild(icon);
         }
 
         function nextQuestion() {
@@ -284,26 +290,45 @@
             }
         }
 
-        function prevQuestion() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                showQuestion();
-            }
-        }
-
         function showResults() {
             const container = document.querySelector(".flashcards-container");
             container.innerHTML = `
-        <div class="flashcard">
-            <p>Test Ukończony!<br>Wynik: ${score} / ${currentSet.length}</p>
-        </div>
-        <div class="flashcard-buttons">
-            
-    `;
+                <div class="flashcard">
+                    <p>Test ukończony!<br>Wynik: ${score} / ${currentSet.length}</p>
+                </div>
+
+                <div class="flashcard-buttons">
+                    <button id="restart-btn">Powtórz test</button>
+                </div>
+            `;
+
+            document
+                .getElementById("restart-btn")
+                .addEventListener("click", restartQuiz);
+        }
+
+        function restartQuiz() {
+            currentIndex = 0;
+            score = 0;
+            userAnswers = {};
+
+            document.querySelector(".flashcards-container").innerHTML = `
+                <div class="progress-info" id="progress-info"></div>
+                <div class="flashcard">
+                    <p id="question-text"></p>
+                </div>
+                <div class="answers-container"></div>
+                <div class="flashcard-buttons">
+                    <button id="next-btn" disabled>Następne</button>
+                </div>
+            `;
+
+            location.reload(); // opcjonalnie: usuń, jeśli NIE chcesz resetu widoku
         }
 
         document.addEventListener("DOMContentLoaded", loadSet);
     </script>
+
 
 </body>
 

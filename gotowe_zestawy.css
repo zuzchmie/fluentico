@@ -248,7 +248,7 @@ body {
     transform: scale(1.1);
     transition: transform 0.2s ease;
 }
-    
+
 
 button:focus {
     outline: 2px solid #699cb5;
@@ -317,8 +317,8 @@ button:focus {
     .page-title {
         font-size: 72px;
         line-height: 120px;
-        margin-left:40px;
-        
+        margin-left: 40px;
+
     }
 
     .category-text {

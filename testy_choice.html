@@ -3,50 +3,52 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="grid_zestaw.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="gotowe_zestawy.css" />
-    <title>Fluentico</title>
+    <title>Test</title>
 
     <style>
-        .content-area {
-            flex: 1;
-            padding: 40px;
+        .header-section.grid-header {
             display: flex;
-            flex-direction: column;
-        }
-
-        .back-link {
-            background-color: #699cb5;
-            color: #ffffff;
-            padding: 12px 24px;
-            font-size: 24px;
-            font-family: 'Archivo Black', Arial, sans-serif;
-            border-radius: 24px;
-            text-decoration: none;
-            display: inline-block;
-            align-self: flex-start;
-            margin-bottom: 10px;
-        }
-
-        .flashcards-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
             gap: 20px;
         }
 
+        .page-title {
+            margin-left: 60px;
+            font-size: 60px;
+            font-family: 'Geologica', Arial, sans-serif;
+            font-weight: 700;
+            line-height: 60px;
+            color: #000000;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .progress-info {
+            font-size: 18px;
+            color: #666;
+        }
+
         .flashcard {
-            width: 400px;
-            max-width: 90%;
+            width: 420px;
             min-height: 200px;
             background-color: #365b6d;
             border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
+            font-size: 34px;
             font-family: 'Archivo Black', Arial, sans-serif;
             color: #ffffff;
             text-align: center;
@@ -54,11 +56,10 @@
         }
 
         .answers-container {
+            width: 420px;
             display: flex;
             flex-direction: column;
             gap: 16px;
-            width: 400px;
-            max-width: 90%;
         }
 
         .answer-button {
@@ -66,11 +67,10 @@
             color: #ffffff;
             border: none;
             padding: 16px;
-            font-size: 24px;
+            font-size: 22px;
             font-family: 'Archivo Black', Arial, sans-serif;
             border-radius: 20px;
             cursor: pointer;
-            width: 100%;
             transition: 0.3s;
         }
 
@@ -79,27 +79,20 @@
             transform: scale(1.03);
         }
 
-        .flashcard-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-        }
-
-        .flashcard-buttons button {
+        .quiz-buttons button {
             background-color: #699cb5;
             color: #ffffff;
             border: none;
-            padding: 16px 28px;
-            font-size: 24px;
-            font-family: 'Archivo Black', Arial, sans-serif;
+            padding: 16px 32px;
+            font-size: 22px;
             border-radius: 24px;
             cursor: pointer;
-            transition: 0.3s;
         }
 
-        .flashcard-buttons button:hover {
-            background-color: #5a8ba1;
-            transform: scale(1.05);
+        .quiz-buttons button:disabled {
+            background-color: #b5b5b5;
+            cursor: not-allowed;
+            opacity: 0.7;
         }
     </style>
 </head>
@@ -108,29 +101,25 @@
     <div class="main-container">
 
         <!-- SIDEBAR -->
-        <aside class="sidebar" id="sidebar">
+        <aside class="sidebar">
             <div class="logo">
                 <div class="logo-square"></div>
                 <h1 class="brand-title">FLUENTICO</h1>
             </div>
 
-            <nav class="sidebar-menu" role="navigation">
-                <a href="website.html" class="menu-item darkgray" role="menuitem">
+            <nav class="sidebar-menu">
+                <a href="website.html" class="menu-item darkgray">
                     <span class="menu-text large">EKRAN GŁÓWNY</span>
                 </a>
-
-                <a href="fiszki_main.html" class="menu-item blue" role="menuitem">
+                <a href="fiszki_main.html" class="menu-item blue">
                     <span class="menu-text large">FISZKI</span>
                 </a>
-
-                <a href="quiz_dnia.html" class="menu-item lazur" role="menuitem">
+                <a href="quiz_dnia.html" class="menu-item lazur">
                     <span class="menu-text large">QUIZ DNIA</span>
                 </a>
-
-                <a href="testy_main.html" class="menu-item darkblue" role="menuitem">
+                <a href="testy_main.html" class="menu-item darkblue">
                     <span class="menu-text large">TESTY</span>
                 </a>
-
                 <div class="divider"></div>
 
                 <button class="menu-item settings" role="menuitem">
@@ -139,188 +128,133 @@
             </nav>
         </aside>
 
-        <!-- MAIN CONTENT -->
+        <!-- MAIN -->
         <main class="content-area">
-            <header class="header-section">
+
+            <!-- HEADER (UNCHANGED) -->
+            <header class="header-section grid-header">
                 <a href="testy_main.html" class="back-button">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="24" height="24" viewBox="0 0 24 24">
                         <path d="M15 18L9 12L15 6" stroke="white" stroke-width="5" stroke-linecap="round"
                             stroke-linejoin="round" />
                     </svg>
                 </a>
-                <h1 class="page-title">TEST</h1>
+
+                <h1 class="page-title" id="set-title">Ładowanie...</h1>
             </header>
 
-            <section class="flashcards-container">
+            <!-- QUIZ -->
+            <section class="quiz-container" id="quiz-container">
+                <div class="progress-info" id="progress"></div>
 
                 <div class="flashcard">
-                    <p id="question-text">Ładowanie...</p>
+                    <p id="question"></p>
                 </div>
 
-                <div class="answers-container">
-                    <button class="answer-button" id="btn1"></button>
-                    <button class="answer-button" id="btn2"></button>
-                    <button class="answer-button" id="btn3"></button>
-                </div>
+                <div class="answers-container" id="answers"></div>
 
-                <div class="flashcard-buttons">
-
-                    <button id="next-btn">Następna</button>
+                <div class="quiz-buttons">
+                    <button id="next-btn" disabled>Następne</button>
                 </div>
             </section>
+
         </main>
     </div>
 
+    <!-- DATA -->
     <script src="testData.js"></script>
 
     <script>
-        let currentSet = [];
-        let currentIndex = 0;
+        const TOTAL = 15;
+        let set = [];
+        let index = 0;
         let score = 0;
-        const TOTAL_QUESTIONS = 15;
+        let answered = false;
 
-        const flashcard = document.querySelector(".flashcard p");
-        const answersContainer = document.querySelector(".answers-container");
+        const question = document.getElementById("question");
+        const answersBox = document.getElementById("answers");
         const nextBtn = document.getElementById("next-btn");
+        const progress = document.getElementById("progress");
+        const title = document.getElementById("set-title");
+        const quiz = document.getElementById("quiz-container");
 
-
-        if (nextBtn) nextBtn.addEventListener("click", nextQuestion);
-
-
-        function getUrlParameter(name) {
-            const params = new URLSearchParams(window.location.search);
-            return params.get(name);
+        function getParam(name) {
+            return new URLSearchParams(window.location.search).get(name);
         }
 
-        // Helper to shuffle any array
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
+        function shuffle(arr) {
+            return arr.sort(() => Math.random() - 0.5);
         }
 
-        function loadSet() {
+        function init() {
             loadCustomFlashcards();
-            const setName = getUrlParameter("set") || "jedzenie";
-            const fullData = getTestSet(setName);
+            const setName = getParam("set");
+            title.textContent = setName.replace(/_/g, " ").toUpperCase();
 
-            const pageTitle = document.querySelector(".page-title");
-            pageTitle.textContent = `TEST: ${setName}`;
-            
-            if (fullData.length === 0) {
-                flashcard.textContent = "Brak pytań w tym teście";
-                return;
-            }
-
-            // 1. Shuffle all questions and pick the first 15
-            currentSet = shuffleArray([...fullData]).slice(0, TOTAL_QUESTIONS);
-
+            set = shuffle([...getTestSet(setName)]).slice(0, TOTAL);
             showQuestion();
         }
 
-        function addIcon(button, type) {
-            const icon = document.createElement("i");
-            icon.classList.add("bi");
-        
-            if (type === "correct") {
-                icon.classList.add("bi-check-circle-fill");
-                icon.style.color = "#4CAF50";
-            } else {
-                icon.classList.add("bi-x-circle-fill");
-                icon.style.color = "#F44336";
-            }
-        
-            icon.style.marginLeft = "12px";
-            button.appendChild(icon);
-        }
-
         function showQuestion() {
-            // Check if we finished the 15 questions
-            if (currentIndex >= currentSet.length) {
-                showResults();
-                return;
-            }
+            answered = false;
+            nextBtn.disabled = true;
+            answersBox.innerHTML = "";
 
-            const card = currentSet[currentIndex];
-            flashcard.textContent = card.polish;
+            const q = set[index];
+            question.textContent = q.polish;
+            progress.textContent = `Pytanie ${index + 1} z ${set.length}`;
 
-            const answers = [
-                { text: card.correct, correct: true },
-                { text: card.wrong1, correct: false },
-                { text: card.wrong2, correct: false }
-            ];
-
-            shuffleArray(answers); // Randomize button order
-
-            answersContainer.innerHTML = "";
-            answers.forEach(ans => {
+            shuffle([
+                { t: q.correct, c: true },
+                { t: q.wrong1, c: false },
+                { t: q.wrong2, c: false }
+            ]).forEach(a => {
                 const btn = document.createElement("button");
-                btn.classList.add("answer-button");
-                btn.textContent = ans.text;
-
-                btn.addEventListener("click", () => {
-                    // Disable all buttons in this question so user can't change answer
-                    const allBtns = answersContainer.querySelectorAll('button');
-                    allBtns.forEach(b => b.style.pointerEvents = "none");
-
-                    if (ans.correct) {
-                        btn.style.backgroundColor = "#4CAF50"; // Green
-                        addIcon(btn, "correct");
-                        score++;
-                    } else {
-                        btn.style.backgroundColor = "#F44336"; // Red
-                        addIcon(btn, "wrong");
-                        // Highlight the correct one too so the user learns
-                        highlightCorrectWithIcon();
-                    }
-                });
-
-                answersContainer.appendChild(btn);
+                btn.className = "answer-button";
+                btn.textContent = a.t;
+                btn.onclick = () => answer(btn, a.c);
+                answersBox.appendChild(btn);
             });
         }
 
-        function highlightCorrectWithIcon() {
-            const card = currentSet[currentIndex];
-            const buttons = answersContainer.querySelectorAll(".answer-button");
-        
-            buttons.forEach(btn => {
-                if (btn.textContent === card.correct) {
-                    btn.style.border = "4px solid #4CAF50";
-                    addIcon(btn, "correct");
-                }
-            });
-        }
+        function answer(btn, correct) {
+            if (answered) return;
+            answered = true;
 
-        function showResults() {
-            // Hide buttons and show final score
-            document.querySelector(".flashcards-container").innerHTML = `
-        <div class="flashcard">
-            <p>Koniec Testu!<br>Twój wynik: ${score} / ${currentSet.length}</p>
-        </div>
-    `;
-        }
+            document.querySelectorAll(".answer-button")
+                .forEach(b => b.style.pointerEvents = "none");
 
-        function nextQuestion() {
-            if (currentIndex < currentSet.length - 1) {
-                currentIndex++;
-                showQuestion();
+            if (correct) {
+                btn.style.backgroundColor = "#4CAF50";
+                score++;
             } else {
-                showResults();
+                btn.style.backgroundColor = "#F44336";
             }
+
+            nextBtn.disabled = false;
         }
 
-        function prevQuestion() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                showQuestion();
-            }
+        nextBtn.onclick = () => {
+            if (++index < set.length) showQuestion();
+            else showResult();
+        };
+
+        function showResult() {
+            const container = document.querySelector(".flashcards-container");
+            quiz.innerHTML = `
+                <div style="margin-top: 100px; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+            <div class="flashcard" style="min-height: 150px; width: 420px; font-size: 28px;">
+                    Wynik: ${score} / ${set.length}
+                </div>
+                <div class="quiz-buttons">
+                    <button id="retry">Powtórz test</button>
+                </div>
+            `;
+            document.getElementById("retry").onclick = () => location.reload();
         }
 
-        document.addEventListener("DOMContentLoaded", loadSet);
+        document.addEventListener("DOMContentLoaded", init);
     </script>
-
 </body>
 
 </html>

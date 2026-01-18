@@ -93,14 +93,7 @@
                 margin-top: 10px;
                 text-align: center;
             }
-
-            #fav-btn {
-                background-color: #f0ad4e;
-            }
-
-            #fav-btn.active {
-                background-color: #5cb85c;
-            }
+        }
     </style>
 </head>
 
@@ -233,7 +226,7 @@
 
             progressInfo.textContent = `Fiszka ${currentCardIndex + 1} z ${currentSet.length}`;
 
-            updateFavButton(); // ⭐ IMPORTANT
+
         }
 
 
@@ -285,32 +278,9 @@
 
         const favBtn = document.getElementById('fav-btn');
 
-        function updateFavButton() {
-            const favs = getFavourites();
-            const id = getCurrentCardId();
 
-            if (favs.includes(id)) {
-                favBtn.textContent = "★ Usuń z ulubionych";
-                favBtn.classList.add("active");
-            } else {
-                favBtn.textContent = "☆ Dodaj do ulubionych";
-                favBtn.classList.remove("active");
-            }
-        }
 
-        function toggleFavourite() {
-            let favs = getFavourites();
-            const id = getCurrentCardId();
 
-            if (favs.includes(id)) {
-                favs = favs.filter(f => f !== id);
-            } else {
-                favs.push(id);
-            }
-
-            saveFavourites(favs);
-            updateFavButton();
-        }
 
 
 

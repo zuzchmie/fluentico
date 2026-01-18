@@ -3,17 +3,18 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="grid_zestaw.css" />
     <title>Fiszki</title>
     <style>
         .flashcard-item {
             position: relative;
         }
-        
+
         .category-button {
             position: relative;
         }
-        
+
         .delete-btn-card {
             background-color: #d9534f;
             color: white;
@@ -32,11 +33,11 @@
             top: 50%;
             transform: translateY(-50%);
         }
-        
+
         .delete-btn-card:hover {
             background-color: #c9302c;
         }
-        
+
         .modal-overlay {
             display: none;
             position: fixed;
@@ -49,11 +50,11 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .modal-overlay.active {
             display: flex;
         }
-        
+
         .modal-content {
             background-color: white;
             border-radius: 12px;
@@ -62,25 +63,25 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
-        
+
         .modal-content h2 {
             color: #333;
             margin-bottom: 15px;
             font-size: 20px;
         }
-        
+
         .modal-content p {
             color: #666;
             margin-bottom: 25px;
             font-size: 14px;
         }
-        
+
         .modal-buttons {
             display: flex;
             gap: 10px;
             justify-content: center;
         }
-        
+
         .modal-btn {
             padding: 10px 20px;
             border: none;
@@ -90,21 +91,21 @@
             font-weight: bold;
             transition: background-color 0.3s;
         }
-        
+
         .modal-btn-confirm {
             background-color: #d9534f;
             color: white;
         }
-        
+
         .modal-btn-confirm:hover {
             background-color: #c9302c;
         }
-        
+
         .modal-btn-cancel {
             background-color: #e0e0e0;
             color: #333;
         }
-        
+
         .modal-btn-cancel:hover {
             background-color: #d0d0d0;
         }
@@ -167,7 +168,7 @@
                     <!-- Tutaj będą dynamicznie generowane fiszki -->
                 </div>
             </section>
-            
+
             <!-- Modal potwierdzenia usunięcia -->
             <div class="modal-overlay" id="delete-modal">
                 <div class="modal-content">
@@ -214,11 +215,11 @@
             flashcards.forEach((card, index) => {
                 // Sprawdź czy to custom fiszka
                 const isCustom = index >= originalSize;
-                
+
                 if (isCustom) {
                     const wrapper = document.createElement('div');
                     wrapper.className = 'flashcard-item';
-                    
+
                     const flashcardElement = document.createElement('div');
                     flashcardElement.className = 'category-button';
                     flashcardElement.innerHTML = `
@@ -229,7 +230,7 @@
                             <span class="category-text small">${card.english}</span>
                         </div>
                     `;
-                    
+
                     const deleteBtn = document.createElement('button');
                     deleteBtn.className = 'delete-btn-card';
                     deleteBtn.textContent = '✕';
@@ -237,7 +238,7 @@
                         e.stopPropagation();
                         deleteCard(setName, index, card.polish, card.english);
                     };
-                    
+
                     wrapper.appendChild(flashcardElement);
                     wrapper.appendChild(deleteBtn);
                     container.appendChild(wrapper);
@@ -271,33 +272,33 @@
                 polish: polish,
                 english: english
             };
-            
-            document.getElementById('delete-modal-text').textContent = 
+
+            document.getElementById('delete-modal-text').textContent =
                 `Czy na pewno chcesz usunąć fiszkę: "${polish}" - "${english}"?`;
             document.getElementById('delete-modal').classList.add('active');
         }
-        
+
         // Zamknij modal
         function closeDeleteModal() {
             document.getElementById('delete-modal').classList.remove('active');
             window.pendingDelete = null;
         }
-        
+
         // Potwierdź usunięcie
         function confirmDelete() {
             if (!window.pendingDelete) return;
-            
+
             const { setName, polish, english } = window.pendingDelete;
-            
+
             // Usuń z localStorage
             const customCards = JSON.parse(localStorage.getItem('customFlashcards')) || {};
             if (customCards[setName]) {
-                customCards[setName] = customCards[setName].filter(card => 
+                customCards[setName] = customCards[setName].filter(card =>
                     !(card.polish === polish && card.english === english)
                 );
                 localStorage.setItem('customFlashcards', JSON.stringify(customCards));
             }
-            
+
             // Zamknij modal i odśwież stronę
             closeDeleteModal();
             location.reload();
