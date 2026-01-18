@@ -69,16 +69,33 @@
             </div>
 
             <div class="flashcard-buttons">
-                <button id="save-btn">ZAPISZ</button>
+                <button id="save-btn" class="save-btn-disabled">UTWÓRZ</button>
             </div>
             
             <!-- Komunikat o zapisaniu -->
             <div id="save-message" class="save-message" style="display: none;">
-                Zapisano Fiszkę
+                Utworzono Fiszkę
+            </div>
+            
+            <!-- Komunikat o błędzie -->
+            <div id="error-message" class="error-message" style="display: none;">
+                Uzupełnij fiszkę oraz wybierz zestaw
             </div>
         </section>
 
     </main>
+    
+    <!-- Modal tworzenia zestawu -->
+    <div id="create-set-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h2>Utwórz Zestaw</h2>
+            <input type="text" id="set-name-input" class="modal-input" placeholder="Nazwa zestawu" maxlength="50" />
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" onclick="closeCreateSetModal()">Anuluj</button>
+                <button class="modal-btn modal-btn-confirm" onclick="confirmCreateSet()">Utwórz</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Dołączamy plik z danymi fiszek -->
@@ -98,10 +115,38 @@
 
     // Inicjalizacja — generowanie listy zestawów w dropdown
     function initializeSetsDropdown() {
-        const sets = getAllSets();
+        // Załaduj custom zestawy do window.flashcardsSets
+        const customSets = JSON.parse(localStorage.getItem('customSets')) || [];
+        customSets.forEach(setName => {
+            if (!window.flashcardsSets[setName]) {
+                window.flashcardsSets[setName] = {
+                    icon: 'bi-bookmark',
+                    cards: []
+                };
+            }
+        });
+        
+        // Połącz stałe zestawy z custom zestawami
+        const allSets = getAllSets().concat(customSets);
+        const uniqueSets = [...new Set(allSets)];
+        
         setsList.innerHTML = ''; // Wyczyszczenie poprzedniej listy
         
-        sets.forEach(setName => {
+        // Dodaj przycisk "UTWÓRZ ZESTAW" na górze
+        const createSetItem = document.createElement('div');
+        createSetItem.className = 'set-item create-set-item';
+        createSetItem.textContent = 'UTWÓRZ ZESTAW';
+        createSetItem.addEventListener('click', () => {
+            openCreateSetModal();
+        });
+        setsList.appendChild(createSetItem);
+        
+        // Dodaj separator
+        const separator = document.createElement('div');
+        separator.className = 'set-item-separator';
+        setsList.appendChild(separator);
+        
+        uniqueSets.forEach(setName => {
             const setItem = document.createElement('div');
             setItem.className = 'set-item';
             setItem.textContent = setName;
@@ -116,6 +161,7 @@
         selectedSet = setName;
         selectSetBtn.textContent = setName;
         setsDropdown.style.display = 'none'; // Zamknięcie dropdown
+        updateSaveButtonState(); // Aktualizuj stan przycisku
     }
 
     // Otwarcie/zamknięcie dropdown
@@ -131,18 +177,111 @@
         }
     });
 
-    // Obsługa przycisku ZAPISZ
+    // Sprawdzenie stanu pól i aktualizacja przycisku
+    function updateSaveButtonState() {
+        const frontText = frontInput.value.trim();
+        const backText = backInput.value.trim();
+        const isValid = frontText && backText && selectedSet;
+        
+        if (isValid) {
+            saveBtn.classList.remove('save-btn-disabled');
+            saveBtn.classList.add('save-btn-enabled');
+        } else {
+            saveBtn.classList.remove('save-btn-enabled');
+            saveBtn.classList.add('save-btn-disabled');
+        }
+    }
+
+    // Słuchaj zmian w polach input
+    frontInput.addEventListener('input', updateSaveButtonState);
+    backInput.addEventListener('input', updateSaveButtonState);
+
+    // Funkcja do otwierania modala tworzenia zestawu
+    function openCreateSetModal() {
+        const modal = document.getElementById('create-set-modal');
+        const input = document.getElementById('set-name-input');
+        modal.style.display = 'flex';
+        input.value = ''; // Wyczyść poprzednią wartość
+        input.focus(); // Fokus na input
+        setsDropdown.style.display = 'none'; // Zamknij dropdown
+    }
+    
+    // Funkcja do zamykania modala tworzenia zestawu
+    function closeCreateSetModal() {
+        const modal = document.getElementById('create-set-modal');
+        modal.style.display = 'none';
+    }
+    
+    // Funkcja do potwierdzenia utworzenia zestawu
+    function confirmCreateSet() {
+        const input = document.getElementById('set-name-input');
+        const setName = input.value.trim().toUpperCase();
+        
+        if (!setName) {
+            alert('Proszę wpisać nazwę zestawu!');
+            return;
+        }
+        
+        // Sprawdź czy zestaw już istnieje
+        const sets = getAllSets();
+        if (sets.includes(setName)) {
+            alert('Zestaw o tej nazwie już istnieje!');
+            return;
+        }
+        
+        // Dodaj nowy zestaw
+        if (!window.flashcardsSets[setName]) {
+            window.flashcardsSets[setName] = {
+                icon: 'bi-bookmark',
+                cards: []
+            };
+        }
+        
+        // Zapisz w localStorage
+        const customSets = JSON.parse(localStorage.getItem('customSets')) || [];
+        if (!customSets.includes(setName)) {
+            customSets.push(setName);
+            localStorage.setItem('customSets', JSON.stringify(customSets));
+        }
+        
+        // Zamknij modal i odśwież dropdown
+        closeCreateSetModal();
+        initializeSetsDropdown();
+        selectSet(setName); // Automatycznie wybierz nowy zestaw
+    }
+    
+    // Obsługa Enter w input
+    document.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const modal = document.getElementById('create-set-modal');
+            if (modal.style.display === 'flex') {
+                confirmCreateSet();
+            }
+        }
+    });
+
+    // Obsługa przycisku UTWÓRZ
     saveBtn.addEventListener('click', () => {
         const frontText = frontInput.value.trim();
         const backText = backInput.value.trim();
+        const isFrontEmpty = !frontText;
+        const isBackEmpty = !backText;
+        const isSetNotSelected = !selectedSet;
 
-        if (!frontText || !backText) {
-            alert('Proszę wypełnić oba pola: przód i tył karty!');
-            return;
-        }
-
-        if (!selectedSet) {
-            alert('Proszę wybrać zestaw!');
+        // Sprawdź czy którekolwiek pole jest puste
+        if (isFrontEmpty || isBackEmpty || isSetNotSelected) {
+            // Pokaż komunikat błędu
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.style.display = 'block';
+            errorMessage.style.animation = 'none';
+            setTimeout(() => {
+                errorMessage.style.animation = 'fadeInOut 3s ease-in-out';
+            }, 10);
+            
+            // Ukryj komunikat błędu po animacji
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 3000);
             return;
         }
 
@@ -163,11 +302,10 @@
             saveMessage.style.display = 'none';
         }, 3000);
 
-        // Czyszczenie formularza
+        // Czyszczenie formularza (ale zachowaj wybrany zestaw)
         frontInput.value = '';
         backInput.value = '';
-        selectedSet = null;
-        selectSetBtn.textContent = 'WYBIERZ ZESTAW';
+        updateSaveButtonState(); // Aktualizuj stan przycisku
     });
 
     // Funkcja do dodawania nowej fiszki do zestawu

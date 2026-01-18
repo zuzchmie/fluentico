@@ -175,6 +175,17 @@
 
         // Funkcja do ładowania zestawu
         function loadFlashcardsSet() {
+            // Załaduj custom zestawy do window.flashcardsSets
+            const customSets = JSON.parse(localStorage.getItem('customSets')) || [];
+            customSets.forEach(setName => {
+                if (!window.flashcardsSets[setName]) {
+                    window.flashcardsSets[setName] = {
+                        icon: 'bi-bookmark',
+                        cards: []
+                    };
+                }
+            });
+            
             loadCustomFlashcards();
             const setName = getUrlParameter('set') || 'jedzenie';
             currentSet = getFlashcardsSet(setName);
@@ -186,7 +197,7 @@
             document.title = `Zestaw – ${displayName} | Fluentico`;
 
             if (currentSet.length === 0) {
-                flashcardText.textContent = "Brak fiszek w zestawie";
+                flashcardText.textContent = "Zestaw jest pusty";
                 return;
             }
 

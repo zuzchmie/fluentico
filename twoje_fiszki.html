@@ -63,13 +63,41 @@
 
     <script src="flashcardsData.js"></script>
     <script>
+        // Załaduj custom zestawy do window.flashcardsSets
+        function loadCustomSets() {
+            const customSets = JSON.parse(localStorage.getItem('customSets')) || [];
+            
+            customSets.forEach(setName => {
+                if (!window.flashcardsSets[setName]) {
+                    window.flashcardsSets[setName] = {
+                        icon: 'bi-bookmark',
+                        cards: []
+                    };
+                }
+            });
+        }
+        
         // Funkcja do tworzenia przycisków zestawów
         // teraz z dodaniem ikony
         function generateSetButtons() {
             const container = document.getElementById('sets-container');
-            const sets = getAllSets();
+            
+            // Załaduj custom zestawy
+            loadCustomSets();
+            
+            // Załaduj custom fiszki z localStorage
+            loadCustomFlashcards();
+            
+            // Załaduj custom zestawy z localStorage
+            const customSets = JSON.parse(localStorage.getItem('customSets')) || [];
+            
+            // Połącz stałe zestawy z custom zestawami
+            const allSets = getAllSets().concat(customSets);
+            
+            // Usuń duplikaty
+            const uniqueSets = [...new Set(allSets)];
         
-            sets.forEach(setName => {
+            uniqueSets.forEach(setName => {
                 const button = document.createElement('button');
                 button.className = 'category-button';
                 button.onclick = function () {

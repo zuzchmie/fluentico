@@ -109,6 +109,45 @@
         .modal-btn-cancel:hover {
             background-color: #d0d0d0;
         }
+
+        .header-buttons-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .delete-set-btn {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            font-size: 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+            position: relative;
+            right: auto;
+            top: auto;
+        }
+
+        .delete-set-btn:hover {
+            background-color: #c9302c;
+        }
+
+        .grid-header {
+            position: relative;
+        }
+
+        .delete-set-btn {
+            position: absolute;
+            right: -52px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
     </style>
 </head>
 
@@ -162,6 +201,7 @@
                 <div class="grid-header">
                     <span class="category-text largeB" id="set-title">Ładowanie...</span>
                     <button class="grid-action" type="button" id="start-button">Rozpocznij</button>
+                    <button class="delete-set-btn" type="button" id="delete-set-button" title="Usuń zestaw" style="display: none;">✕</button>
                 </div>
 
                 <div class="grid-container" id="flashcards-container">
@@ -194,17 +234,37 @@
 
         // Funkcja do generowania fiszek
         function generateFlashcards() {
-            loadCustomFlashcards();
             const setName = getUrlParameter('set');
-            const flashcards = getFlashcardsSet(setName);
             const container = document.getElementById('flashcards-container');
             const titleElement = document.getElementById('set-title');
             const startButton = document.getElementById('start-button');
+
+            // Załaduj custom zestawy do window.flashcardsSets
+            const customSets = JSON.parse(localStorage.getItem('customSets')) || [];
+            customSets.forEach(setName => {
+                if (!window.flashcardsSets[setName]) {
+                    window.flashcardsSets[setName] = {
+                        icon: 'bi-bookmark',
+                        cards: []
+                    };
+                }
+            });
+            
+            // Załaduj custom fiszki
+            loadCustomFlashcards();
+            
+            // Teraz pobierz fiszki
+            const flashcards = getFlashcardsSet(setName);
 
             // Ustawiamy tytuł zestawu
             const displayName = setName.replace(/_/g, ' ')
                 .replace(/\b\w/g, l => l.toUpperCase());
             titleElement.textContent = displayName;
+
+            // Sprawdź czy jest to custom zestaw i pokaż przycisk usunięcia
+            const isCustomSet = customSets.includes(setName);
+            const deleteSetButton = document.getElementById('delete-set-button');
+            deleteSetButton.style.display = isCustomSet ? 'flex' : 'none';
 
             // Pobierz custom fiszki dla tego zestawu
             const customCards = JSON.parse(localStorage.getItem('customFlashcards')) || {};
@@ -212,69 +272,87 @@
             const originalSize = flashcards.length - customForThisSet.length;
 
             // Generujemy fiszki
-            flashcards.forEach((card, index) => {
-                // Sprawdź czy to custom fiszka
-                const isCustom = index >= originalSize;
+            if (flashcards.length === 0) {
+                // Wyświetl komunikat "Zestaw jest pusty"
+                const emptyMessage = document.createElement('div');
+                emptyMessage.style.textAlign = 'center';
+                emptyMessage.style.color = '#999';
+                emptyMessage.style.fontSize = '18px';
+                emptyMessage.style.marginTop = '40px';
+                emptyMessage.textContent = 'Zestaw jest pusty';
+                container.appendChild(emptyMessage);
+            } else {
+                flashcards.forEach((card, index) => {
+                    // Sprawdź czy to custom fiszka
+                    const isCustom = index >= originalSize;
 
-                if (isCustom) {
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'flashcard-item';
+                    if (isCustom) {
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'flashcard-item';
 
-                    const flashcardElement = document.createElement('div');
-                    flashcardElement.className = 'category-button';
-                    flashcardElement.innerHTML = `
-                        <div class="split-left">
-                            <span class="category-text small">${card.polish}</span>
-                        </div>
-                        <div class="split-right">
-                            <span class="category-text small">${card.english}</span>
-                        </div>
-                    `;
+                        const flashcardElement = document.createElement('div');
+                        flashcardElement.className = 'category-button';
+                        flashcardElement.innerHTML = `
+                            <div class="split-left">
+                                <span class="category-text small">${card.polish}</span>
+                            </div>
+                            <div class="split-right">
+                                <span class="category-text small">${card.english}</span>
+                            </div>
+                        `;
 
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.className = 'delete-btn-card';
-                    deleteBtn.textContent = '✕';
-                    deleteBtn.onclick = (e) => {
-                        e.stopPropagation();
-                        deleteCard(setName, index, card.polish, card.english);
-                    };
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'delete-btn-card';
+                        deleteBtn.textContent = '✕';
+                        deleteBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            deleteCard(setName, index, card.polish, card.english);
+                        };
 
-                    wrapper.appendChild(flashcardElement);
-                    wrapper.appendChild(deleteBtn);
-                    container.appendChild(wrapper);
-                } else {
-                    const flashcardElement = document.createElement('div');
-                    flashcardElement.className = 'category-button';
-                    flashcardElement.innerHTML = `
-                        <div class="split-left">
-                            <span class="category-text small">${card.polish}</span>
-                        </div>
-                        <div class="split-right">
-                            <span class="category-text small">${card.english}</span>
-                        </div>
-                    `;
-                    container.appendChild(flashcardElement);
-                }
-            });
+                        wrapper.appendChild(flashcardElement);
+                        wrapper.appendChild(deleteBtn);
+                        container.appendChild(wrapper);
+                    } else {
+                        const flashcardElement = document.createElement('div');
+                        flashcardElement.className = 'category-button';
+                        flashcardElement.innerHTML = `
+                            <div class="split-left">
+                                <span class="category-text small">${card.polish}</span>
+                            </div>
+                            <div class="split-right">
+                                <span class="category-text small">${card.english}</span>
+                            </div>
+                        `;
+                        container.appendChild(flashcardElement);
+                    }
+                });
+            }
 
             // Ustawiamy akcję dla przycisku "Rozpocznij"
-            startButton.onclick = function () {
-                const setName = getUrlParameter('set');
-                window.location.href = `zestaw_twoje_fiszki.html?set=${setName}`;
-            };
+            if (flashcards.length === 0) {
+                startButton.disabled = true;
+                startButton.style.opacity = '0.5';
+                startButton.style.cursor = 'not-allowed';
+            } else {
+                startButton.onclick = function () {
+                    const setName = getUrlParameter('set');
+                    window.location.href = `zestaw_twoje_fiszki.html?set=${setName}`;
+                };
+            }
         }
 
         // Funkcja do usuwania karty
         function deleteCard(setName, index, polish, english) {
             // Pokaż modal zamiast confirm()
             window.pendingDelete = {
+                type: 'card',
                 setName: setName,
                 polish: polish,
                 english: english
             };
 
             document.getElementById('delete-modal-text').textContent =
-                `Czy na pewno chcesz usunąć fiszkę: "${polish}" - "${english}"?`;
+                `Czy na pewno chcesz usuńć fiszkę: "${polish}" - "${english}"?`;
             document.getElementById('delete-modal').classList.add('active');
         }
 
@@ -288,15 +366,36 @@
         function confirmDelete() {
             if (!window.pendingDelete) return;
 
-            const { setName, polish, english } = window.pendingDelete;
+            const deleteType = window.pendingDelete.type;
 
-            // Usuń z localStorage
-            const customCards = JSON.parse(localStorage.getItem('customFlashcards')) || {};
-            if (customCards[setName]) {
-                customCards[setName] = customCards[setName].filter(card =>
-                    !(card.polish === polish && card.english === english)
-                );
+            if (deleteType === 'card') {
+                const { setName, polish, english } = window.pendingDelete;
+
+                // Usuń z localStorage
+                const customCards = JSON.parse(localStorage.getItem('customFlashcards')) || {};
+                if (customCards[setName]) {
+                    customCards[setName] = customCards[setName].filter(card =>
+                        !(card.polish === polish && card.english === english)
+                    );
+                    localStorage.setItem('customFlashcards', JSON.stringify(customCards));
+                }
+            } else if (deleteType === 'set') {
+                const { setName } = window.pendingDelete;
+
+                // Usuń zestaw z customSets
+                const customSets = JSON.parse(localStorage.getItem('customSets')) || [];
+                const updatedSets = customSets.filter(s => s !== setName);
+                localStorage.setItem('customSets', JSON.stringify(updatedSets));
+
+                // Usuń wszystkie fiszki tego zestawu
+                const customCards = JSON.parse(localStorage.getItem('customFlashcards')) || {};
+                delete customCards[setName];
                 localStorage.setItem('customFlashcards', JSON.stringify(customCards));
+
+                // Powróć do strony "Twoje Fiszki"
+                closeDeleteModal();
+                window.location.href = 'twoje_fiszki.html';
+                return;
             }
 
             // Zamknij modal i odśwież stronę
@@ -304,8 +403,32 @@
             location.reload();
         }
 
+        // Otwórz modal usunięcia zestawu
+        function openDeleteSetModal() {
+            const setName = getUrlParameter('set');
+            
+            // Sprawdź czy jest to custom zestaw
+            const customSets = JSON.parse(localStorage.getItem('customSets')) || [];
+            if (!customSets.includes(setName)) {
+                alert('Możesz usuwać tylko zestawy, które sam utworzyłeś');
+                return;
+            }
+
+            window.pendingDelete = {
+                type: 'set',
+                setName: setName
+            };
+
+            document.getElementById('delete-modal-text').textContent =
+                'Czy na pewno chcesz usunąć cały zestaw i znajdujące się w nim fiszki?';
+            document.getElementById('delete-modal').classList.add('active');
+        }
+
         // Generuj fiszki po załadowaniu strony
-        document.addEventListener('DOMContentLoaded', generateFlashcards);
+        document.addEventListener('DOMContentLoaded', function() {
+            generateFlashcards();
+            document.getElementById('delete-set-button').addEventListener('click', openDeleteSetModal);
+        });
     </script>
 </body>
 

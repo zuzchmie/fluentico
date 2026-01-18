@@ -210,6 +210,17 @@
         // Funkcja do ładowania zestawu
         // teraz obsługuje też mode='favourites' dla nauki tylko polubionych fiszek
         function loadFlashcardsSet() {
+            // Załaduj custom zestawy do window.flashcardsSets
+            const customSets = JSON.parse(localStorage.getItem('customSets')) || [];
+            customSets.forEach(setName => {
+                if (!window.flashcardsSets[setName]) {
+                    window.flashcardsSets[setName] = {
+                        icon: 'bi-bookmark',
+                        cards: []
+                    };
+                }
+            });
+            
             loadCustomFlashcards();
         
             const mode = getUrlParameter('mode');
@@ -230,7 +241,7 @@
             }
         
             if (currentSet.length === 0) {
-                flashcardText.textContent = "Brak fiszek do nauki";
+                flashcardText.textContent = "Zestaw jest pusty";
                 progressInfo.textContent = "";
                 return;
             }

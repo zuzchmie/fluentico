@@ -201,6 +201,17 @@
 
         // Funkcja do generowania fiszek
         function generateFlashcards() {
+            // Załaduj custom zestawy do window.flashcardsSets
+            const customSets = JSON.parse(localStorage.getItem('customSets')) || [];
+            customSets.forEach(setName => {
+                if (!window.flashcardsSets[setName]) {
+                    window.flashcardsSets[setName] = {
+                        icon: 'bi-bookmark',
+                        cards: []
+                    };
+                }
+            });
+            
             loadCustomFlashcards();
             const setName = getUrlParameter('set');
             const flashcards = getFlashcardsSet(setName);
@@ -219,90 +230,107 @@
             const originalSize = flashcards.length - customForThisSet.length;
 
             // Generujemy fiszki
-            flashcards.forEach((card, index) => {
-                // Sprawdź czy to custom fiszka
-                const isCustom = index >= originalSize;
-                
-                if (isCustom) {
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'flashcard-item';
+            if (flashcards.length === 0) {
+                // Wyświetl komunikat "Zestaw jest pusty"
+                const emptyMessage = document.createElement('div');
+                emptyMessage.style.textAlign = 'center';
+                emptyMessage.style.color = '#999';
+                emptyMessage.style.fontSize = '18px';
+                emptyMessage.style.marginTop = '40px';
+                emptyMessage.textContent = 'Zestaw jest pusty';
+                container.appendChild(emptyMessage);
+            } else {
+                flashcards.forEach((card, index) => {
+                    // Sprawdź czy to custom fiszka
+                    const isCustom = index >= originalSize;
                     
-                    const flashcardElement = document.createElement('div');
-                    flashcardElement.className = 'category-button';
-                    flashcardElement.innerHTML = `
-                        <div class="split-left">
-                            <span class="category-text small">${card.polish}</span>
-                        </div>
-                        <div class="split-right">
-                            <span class="category-text small">${card.english}</span>
-                        </div>
-                    `;
+                    if (isCustom) {
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'flashcard-item';
+                        
+                        const flashcardElement = document.createElement('div');
+                        flashcardElement.className = 'category-button';
+                        flashcardElement.innerHTML = `
+                            <div class="split-left">
+                                <span class="category-text small">${card.polish}</span>
+                            </div>
+                            <div class="split-right">
+                                <span class="category-text small">${card.english}</span>
+                            </div>
+                        `;
+                        
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'delete-btn-card';
+                        deleteBtn.textContent = '✕';
+                        deleteBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            deleteCard(setName, index, card.polish, card.english);
+                        };
+                        
+                        wrapper.appendChild(flashcardElement);
+                        wrapper.appendChild(deleteBtn);
+                        container.appendChild(wrapper);
+                    } else {
+                        const flashcardElement = document.createElement('div');
+                        flashcardElement.className = 'category-button';
+                        flashcardElement.innerHTML = `
+                            <div class="split-left">
+                                <span class="category-text small">${card.polish}</span>
+                            </div>
+                            <div class="split-right">
+                                <span class="category-text small">${card.english}</span>
+                            </div>
+                            <button class="like-button" title="Dodaj do ulubionych">
+                                <i class="bi bi-heart"></i>
+                            </button>
+                        `;
                     
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.className = 'delete-btn-card';
-                    deleteBtn.textContent = '✕';
-                    deleteBtn.onclick = (e) => {
-                        e.stopPropagation();
-                        deleteCard(setName, index, card.polish, card.english);
-                    };
+                        const likeButton = flashcardElement.querySelector('.like-button');
+                        const icon = likeButton.querySelector('i');
                     
-                    wrapper.appendChild(flashcardElement);
-                    wrapper.appendChild(deleteBtn);
-                    container.appendChild(wrapper);
-                } else {
-                    const flashcardElement = document.createElement('div');
-                    flashcardElement.className = 'category-button';
-                    flashcardElement.innerHTML = `
-                        <div class="split-left">
-                            <span class="category-text small">${card.polish}</span>
-                        </div>
-                        <div class="split-right">
-                            <span class="category-text small">${card.english}</span>
-                        </div>
-                        <button class="like-button" title="Dodaj do ulubionych">
-                            <i class="bi bi-heart"></i>
-                        </button>
-                    `;
-                
-                    const likeButton = flashcardElement.querySelector('.like-button');
-                    const icon = likeButton.querySelector('i');
-                
-                    const cardId = `${setName}-${card.polish}-${card.english}`;
-                    let favourites = getFavourites();
-                
-                    if (favourites.includes(cardId)) {
-                        icon.className = 'bi bi-heart-fill';
-                        likeButton.classList.add('liked');
-                    }
-                
-                    likeButton.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                
-                        let favs = getFavourites();
-                
-                        if (favs.includes(cardId)) {
-                            favs = favs.filter(id => id !== cardId);
-                            icon.className = 'bi bi-heart';
-                            likeButton.classList.remove('liked');
-                        } else {
-                            favs.push(cardId);
+                        const cardId = `${setName}-${card.polish}-${card.english}`;
+                        let favourites = getFavourites();
+                    
+                        if (favourites.includes(cardId)) {
                             icon.className = 'bi bi-heart-fill';
                             likeButton.classList.add('liked');
                         }
-                
-                        saveFavourites(favs);
-                    });
-                
-                    container.appendChild(flashcardElement);
-                }
+                    
+                        likeButton.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                    
+                            let favs = getFavourites();
+                    
+                            if (favs.includes(cardId)) {
+                                favs = favs.filter(id => id !== cardId);
+                                icon.className = 'bi bi-heart';
+                                likeButton.classList.remove('liked');
+                            } else {
+                                favs.push(cardId);
+                                icon.className = 'bi bi-heart-fill';
+                                likeButton.classList.add('liked');
+                            }
+                    
+                            saveFavourites(favs);
+                        });
+                    
+                        container.appendChild(flashcardElement);
+                    }
 
-            });
+                });
+            }
 
             // Ustawiamy akcję dla przycisku "Rozpocznij"
-            startButton.onclick = function () {
-                const setName = getUrlParameter('set');
-                window.location.href = `zestaw_fiszki.html?set=${setName}`;
-            };
+            if (flashcards.length === 0) {
+                startButton.disabled = true;
+                startButton.style.opacity = '0.5';
+                startButton.style.cursor = 'not-allowed';
+            } else {
+                startButton.onclick = function () {
+                    const setName = getUrlParameter('set');
+                    window.location.href = `zestaw_fiszki.html?set=${setName}`;
+                };
+            }
         }
 
         // Funkcja do usuwania karty
@@ -328,24 +356,22 @@
         // Potwierdź usunięcie
         function confirmDelete() {
             if (!window.pendingDelete) return;
-            
+
             const { setName, polish, english } = window.pendingDelete;
-            
+
             // Usuń z localStorage
             const customCards = JSON.parse(localStorage.getItem('customFlashcards')) || {};
             if (customCards[setName]) {
-                customCards[setName] = customCards[setName].filter(card => 
+                customCards[setName] = customCards[setName].filter(card =>
                     !(card.polish === polish && card.english === english)
                 );
                 localStorage.setItem('customFlashcards', JSON.stringify(customCards));
             }
-            
+
             // Zamknij modal i odśwież stronę
             closeDeleteModal();
             location.reload();
-        }
-
-        // Generuj fiszki po załadowaniu strony
+        }        // Generuj fiszki po załadowaniu strony
         document.addEventListener('DOMContentLoaded', generateFlashcards);
     </script>
 </body>
