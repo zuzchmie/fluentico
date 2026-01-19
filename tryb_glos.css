@@ -95,7 +95,7 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    gap: 300px;
+    gap: 30px;
     width: 100%;
     margin-top: 20px;
     justify-content: space-between;
@@ -296,4 +296,28 @@
 
 .modal-btn-cancel:hover {
     background-color: #d0d0d0;
+}
+
+@media (min-width: 640px) {
+    .flashcard-buttons {
+        gap: 50px;
+    }
+}
+
+@media (min-width: 768px) {
+    .flashcard-buttons {
+        gap: 80px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .flashcard-buttons {
+        gap: 150px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .flashcard-buttons {
+        gap: 300px;
+    }
 }
