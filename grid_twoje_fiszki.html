@@ -232,12 +232,22 @@
             return urlParams.get(name);
         }
 
+        function getFavourites() {
+            return JSON.parse(localStorage.getItem('favourites') || '[]');
+        }
+        
+        function saveFavourites(favs) {
+            localStorage.setItem('favourites', JSON.stringify(favs));
+        }
+
         // Funkcja do generowania fiszek
         function generateFlashcards() {
             const setName = getUrlParameter('set');
             const container = document.getElementById('flashcards-container');
             const titleElement = document.getElementById('set-title');
             const startButton = document.getElementById('start-button');
+
+            container.innerHTML = '';
 
             // Załaduj custom zestawy do window.flashcardsSets
             const customSets = JSON.parse(localStorage.getItem('customSets')) || [];
@@ -283,24 +293,53 @@
                 container.appendChild(emptyMessage);
             } else {
                 flashcards.forEach((card, index) => {
-                    // Sprawdź czy to custom fiszka
                     const isCustom = index >= originalSize;
-
+                    const cardId = `${setName}-${card.polish}-${card.english}`;
+            
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'flashcard-item';
+            
+                    const flashcardElement = document.createElement('div');
+                    flashcardElement.className = 'category-button';
+                    flashcardElement.innerHTML = `
+                        <div class="split-left">
+                            <span class="category-text small">${card.polish}</span>
+                        </div>
+                        <div class="split-right">
+                            <span class="category-text small">${card.english}</span>
+                        </div>
+                        <button class="like-button" title="Ulubione">
+                            <i class="bi bi-heart"></i>
+                        </button>
+                    `;
+            
+                    // funkcja polubienia
+                    const likeButton = flashcardElement.querySelector('.like-button');
+                    const icon = likeButton.querySelector('i');
+            
+                    if (getFavourites().includes(cardId)) {
+                        icon.className = 'bi bi-heart-fill';
+                    }
+            
+                    likeButton.addEventListener('click', (e) => {
+                        e.stopPropagation();
+            
+                        let favs = getFavourites();
+            
+                        if (favs.includes(cardId)) {
+                            favs = favs.filter(id => id !== cardId);
+                            icon.className = 'bi bi-heart';
+                        } else {
+                            favs.push(cardId);
+                            icon.className = 'bi bi-heart-fill';
+                        }
+            
+                        saveFavourites(favs);
+                    });
+            
+                    wrapper.appendChild(flashcardElement);
+            
                     if (isCustom) {
-                        const wrapper = document.createElement('div');
-                        wrapper.className = 'flashcard-item';
-
-                        const flashcardElement = document.createElement('div');
-                        flashcardElement.className = 'category-button';
-                        flashcardElement.innerHTML = `
-                            <div class="split-left">
-                                <span class="category-text small">${card.polish}</span>
-                            </div>
-                            <div class="split-right">
-                                <span class="category-text small">${card.english}</span>
-                            </div>
-                        `;
-
                         const deleteBtn = document.createElement('button');
                         deleteBtn.className = 'delete-btn-card';
                         deleteBtn.textContent = '✕';
@@ -308,34 +347,13 @@
                             e.stopPropagation();
                             deleteCard(setName, index, card.polish, card.english);
                         };
-
-                        wrapper.appendChild(flashcardElement);
                         wrapper.appendChild(deleteBtn);
-                        container.appendChild(wrapper);
-                    } else {
-                        const flashcardElement = document.createElement('div');
-                        flashcardElement.className = 'category-button';
-                        flashcardElement.innerHTML = `
-                            <div class="split-left">
-                                <span class="category-text small">${card.polish}</span>
-                            </div>
-                            <div class="split-right">
-                                <span class="category-text small">${card.english}</span>
-                            </div>
-                        `;
-                        container.appendChild(flashcardElement);
                     }
+            
+                    container.appendChild(wrapper);
                 });
-            }
 
-            // Ustawiamy akcję dla przycisku "Rozpocznij"
-            if (flashcards.length === 0) {
-                startButton.disabled = true;
-                startButton.style.opacity = '0.5';
-                startButton.style.cursor = 'not-allowed';
-            } else {
-                startButton.onclick = function () {
-                    const setName = getUrlParameter('set');
+                startButton.onclick = () => {
                     window.location.href = `zestaw_twoje_fiszki.html?set=${setName}`;
                 };
             }
@@ -379,6 +397,11 @@
                     );
                     localStorage.setItem('customFlashcards', JSON.stringify(customCards));
                 }
+
+                // usuwanie z ulubionych
+                const cardId = `${setName}||${polish}||${english}`;
+                let favs = getFavourites().filter(id => id !== cardId);
+                saveFavourites(favs);
             } else if (deleteType === 'set') {
                 const { setName } = window.pendingDelete;
 
