@@ -239,7 +239,23 @@
                 emptyMessage.style.marginTop = '40px';
                 emptyMessage.textContent = 'Zestaw jest pusty';
                 container.appendChild(emptyMessage);
+                
+                // Sprawdź czy to custom zestaw
+                const isCustomSet = customSets.includes(setName);
+                if (isCustomSet) {
+                    // Dla custom zestawów, przycisk znika całkowicie
+                    startButton.style.display = 'none';
+                } else {
+                    // Dla standardowych zestawów, przycisk jest wyłączony
+                    startButton.disabled = true;
+                    startButton.style.opacity = '0.5';
+                    startButton.style.cursor = 'not-allowed';
+                }
             } else {
+                startButton.style.display = 'block';
+                startButton.disabled = false;
+                startButton.style.opacity = '1';
+                startButton.style.cursor = 'pointer';
                 flashcards.forEach((card, index) => {
                     // Sprawdź czy to custom fiszka
                     const isCustom = index >= originalSize;
@@ -321,11 +337,7 @@
             }
 
             // Ustawiamy akcję dla przycisku "Rozpocznij"
-            if (flashcards.length === 0) {
-                startButton.disabled = true;
-                startButton.style.opacity = '0.5';
-                startButton.style.cursor = 'not-allowed';
-            } else {
+            if (flashcards.length > 0) {
                 startButton.onclick = function () {
                     const setName = getUrlParameter('set');
                     window.location.href = `zestaw_fiszki.html?set=${setName}`;

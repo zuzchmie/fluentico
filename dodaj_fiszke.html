@@ -53,19 +53,24 @@
 
         <section class="flashcard-voice-container">
 
-            <input type="text" id="front-input" class="voice-option" placeholder="Dodaj przód karty" />
-            <input type="text" id="back-input" class="voice-option" placeholder="Dodaj tył karty" />
+            <input type="text" id="front-input" class="voice-option" placeholder="Dodaj przód karty *" />
+            <input type="text" id="back-input" class="voice-option" placeholder="Dodaj tył karty *" />
 
         <!-- Przycisk Dodaj audio i Dodaj obrazek w jednej linii pod fiszką -->
             <div class="insert-buttons">
                 <button class="action-button">DODAJ AUDIO</button>
-                <button class="action-button" id="select-set-btn">WYBIERZ ZESTAW</button>
+                <button class="action-button" id="select-set-btn">WYBIERZ ZESTAW *</button>
                 <button class="action-button">DODAJ OBRAZEK</button>
             </div>
 
             <!-- Dropdown menu dla zestawów (ukryty domyślnie) -->
             <div id="sets-dropdown" class="sets-dropdown" style="display: none;">
                 <div id="sets-list"></div>
+            </div>
+            
+            <!-- Tekst "Obowiązkowe" -->
+            <div id="required-text" style="text-align: center; color: #000000; font-family: 'Archivo Black', Arial, sans-serif; font-size: 16px; margin-top: 0px; margin-bottom: 5px;">
+                * Obowiązkowe
             </div>
 
             <div class="flashcard-buttons">
@@ -182,13 +187,16 @@
         const frontText = frontInput.value.trim();
         const backText = backInput.value.trim();
         const isValid = frontText && backText && selectedSet;
+        const requiredText = document.getElementById('required-text');
         
         if (isValid) {
             saveBtn.classList.remove('save-btn-disabled');
             saveBtn.classList.add('save-btn-enabled');
+            requiredText.style.visibility = 'hidden'; // Ukryj tekst "* Obowiązkowe"
         } else {
             saveBtn.classList.remove('save-btn-enabled');
             saveBtn.classList.add('save-btn-disabled');
+            requiredText.style.visibility = 'visible'; // Pokaż tekst "* Obowiązkowe"
         }
     }
 

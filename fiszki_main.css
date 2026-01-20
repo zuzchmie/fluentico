@@ -161,10 +161,12 @@ body {
 }
 
 .categories-grid {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 15px;
     margin: 0 15px;
+    position: relative;
+    min-height: 500px;
 }
 
 .category-button {
@@ -222,10 +224,10 @@ body {
     color: #ffffff;
     text-decoration: none;
     border-radius: 22px;
-    margin-right: 10px;
     cursor: pointer;
     transition: 0.2s ease;
-    margin-left: 830px;
+    margin-left: auto;
+    margin-top: auto;
 }
 
 .add-button:hover {

@@ -291,7 +291,21 @@
                 emptyMessage.style.marginTop = '40px';
                 emptyMessage.textContent = 'Zestaw jest pusty';
                 container.appendChild(emptyMessage);
+                
+                // Jeśli to custom zestaw, ukryj przycisk
+                if (isCustomSet) {
+                    startButton.style.display = 'none';
+                } else {
+                    startButton.disabled = true;
+                    startButton.style.opacity = '0.5';
+                    startButton.style.cursor = 'not-allowed';
+                }
             } else {
+                // Pokaż przycisk jeśli zestawu nie jest pusty
+                startButton.style.display = 'block';
+                startButton.disabled = false;
+                startButton.style.opacity = '1';
+                startButton.style.cursor = 'pointer';
                 flashcards.forEach((card, index) => {
                     const isCustom = index >= originalSize;
                     const cardId = `${setName}-${card.polish}-${card.english}`;
