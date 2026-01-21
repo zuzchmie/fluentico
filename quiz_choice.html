@@ -296,7 +296,7 @@
 
         function loadSet() {
             if (currentSet.length === 0) {
-                currentSet = getRandom15(); // losujemy TYLKO raz
+                currentSet = getRandom15();
             }
 
             currentIndex = 0;
@@ -406,7 +406,7 @@
                 </div>
             `;
 
-            location.reload(); // opcjonalnie: usuń, jeśli NIE chcesz resetu widoku
+            location.reload();
         }
 
         const quitBtn = document.getElementById("quit-quiz-btn");
@@ -425,7 +425,6 @@
         }
 
         function confirmQuitQuiz() {
-            // tu możesz zapisać postęp, jeśli chcesz
             window.location.href = "quiz_dnia.html";
         }
 
