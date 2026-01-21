@@ -111,19 +111,76 @@
         .answer-button.correct {
             background-color: #4CAF50;
         }
-        
+
         .answer-button.wrong {
             background-color: #F44336;
         }
-        
-        .answer-button.correct-show{
+
+        .answer-button.correct-show {
             background-color: #197d62;
         }
-        
+
         .answer-button.correct .answer-icon,
         .answer-button.wrong .answer-icon,
         .answer-button.correct-show .answer-icon {
             opacity: 1;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            margin-bottom: 25px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .modal-btn-confirm {
+            background-color: #d9534f;
+            color: white;
+        }
+
+        .modal-btn-cancel {
+            background-color: #e0e0e0;
         }
     </style>
 </head>
@@ -158,13 +215,22 @@
                 </button>
             </nav>
         </aside>
-
+        <div class="modal-overlay" id="quit-quiz-modal">
+            <div class="modal-content">
+                <h2 style="color: black;">Potwierdzenie usunięcia</h2>
+                <p>Czy na pewno chcesz przerwać robienie testu?</p>
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-btn-cancel" onclick="closeQuitModal()">Anuluj</button>
+                    <button class="modal-btn modal-btn-confirm" onclick="confirmQuitQuiz()">Przerwij</button>
+                </div>
+            </div>
+        </div>
         <!-- MAIN -->
         <main class="content-area">
 
             <!-- HEADER (UNCHANGED) -->
             <header class="header-section grid-header">
-                <a href="testy_main.html" class="back-button">
+                <a href="#" class="back-button" id="quit-quiz-btn">
                     <svg width="24" height="24" viewBox="0 0 24 24">
                         <path d="M15 18L9 12L15 6" stroke="white" stroke-width="5" stroke-linecap="round"
                             stroke-linejoin="round" />
@@ -242,12 +308,12 @@
             ]).forEach(a => {
                 const btn = document.createElement("button");
                 btn.className = "answer-button";
-                
+
                 btn.innerHTML = `
                     <span class="answer-text">${a.t}</span>
                     <i class="answer-icon bi"></i>
                 `;
-                
+
                 btn.onclick = () => answer(btn, a.c);
                 answersBox.appendChild(btn);
             });
@@ -256,12 +322,12 @@
         function answer(btn, correct) {
             if (answered) return;
             answered = true;
-        
+
             document.querySelectorAll(".answer-button").forEach(b => {
                 b.style.pointerEvents = "none";
-        
+
                 const icon = b.querySelector(".answer-icon");
-        
+
                 if (b === btn) {
                     if (correct) {
                         b.classList.add("correct");
@@ -271,7 +337,7 @@
                         b.classList.add("wrong");
                         icon.classList.add("bi-x-lg");
                     }
-                } 
+                }
 
                 else if (
                     b.textContent.trim() === set[index].correct
@@ -280,7 +346,7 @@
                     icon.classList.add("bi-check-lg");
                 }
             });
-        
+
             nextBtn.disabled = false;
         }
 
@@ -301,6 +367,26 @@
                 </div>
             `;
             document.getElementById("retry").onclick = () => location.reload();
+        }
+
+        const quitBtn = document.getElementById("quit-quiz-btn");
+
+        quitBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            openQuitModal();
+        });
+
+        function openQuitModal() {
+            document.getElementById("quit-quiz-modal").classList.add("active");
+        }
+
+        function closeQuitModal() {
+            document.getElementById("quit-quiz-modal").classList.remove("active");
+        }
+
+        function confirmQuitQuiz() {
+            // tu możesz zapisać postęp, jeśli chcesz
+            window.location.href = "testy_main.html";
         }
 
         document.addEventListener("DOMContentLoaded", init);
